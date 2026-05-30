@@ -1,4 +1,4 @@
-import type {Product} from "~/types/product";
+import type {Product} from "#shared/product";
 
 export const useProducts = () => {
     const { data, pending, error } = useAsyncData(

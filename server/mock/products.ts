@@ -1,15 +1,4 @@
-export interface Product {
-    id: number
-    title: string
-    slug: string
-    price: number
-    image: string
-    imageAlt: string
-    category: string
-    description: string
-    rating: number
-    inventory: number
-}
+import type {Product} from "#shared/product";
 
 export const products: Product[] = [
     {
@@ -17,7 +6,7 @@ export const products: Product[] = [
         title: "Espresso",
         slug: "espresso",
         price: 110000,
-        image: "/images/espresso.png",
+        image: "/images/espresso.jpg",
         imageAlt: "یک فنجان اسپرسوی غلیظ و داغ",
         category: "espresso",
         description: "اسپرسوی اصیل ایتالیایی با طعمی قوی و غلیظ، مناسب برای شروع یک روز پرانرژی",
@@ -29,7 +18,7 @@ export const products: Product[] = [
         title: "Latte",
         slug: "latte",
         price: 135000,
-        image: "/images/latte.png",
+        image: "/images/latte.jpg",
         imageAlt: "لاته کرمی با لایه فوم شیر",
         category: "milky",
         description: "لاته نرم و کرمی با ترکیب اسپرسو و شیر تازه، طعمی ملایم و دلنشین",
@@ -41,7 +30,7 @@ export const products: Product[] = [
         title: "Cappuccino",
         slug: "cappuccino",
         price: 125000,
-        image: "/images/cappuccino.png",
+        image: "/images/Cappuccino.jpg",
         imageAlt: "کاپوچینوی خوش طعم با فوم شیر غلیظ",
         category: "milky",
         description: "کاپوچینوی کلاسیک با فوم شیر غلیظ و پودر کاکائو، انتخابی عالی برای عصرهای پاییزی",
@@ -53,7 +42,7 @@ export const products: Product[] = [
         title: "Alcafé",
         slug: "alcafe",
         price: 95000,
-        image: "/images/alcafe.png",
+        image: "/images/Alcafe.jpg",
         imageAlt: "قهوه فوری آل کافه",
         category: "instant",
         description: "قهوه فوری آل کافه با عطر و طعمی مطبوع، آماده در چند ثانیه",
@@ -65,7 +54,7 @@ export const products: Product[] = [
         title: "Arabica",
         slug: "arabica",
         price: 180000,
-        image: "/images/arabica.png",
+        image: "/images/arabica.jpg",
         imageAlt: "دانه‌های قهوه عربیکا با کیفیت بالا",
         category: "beans",
         description: "قهوه عربیکا با عطر و طعم میوه‌ای و اسیدیته متعادل، مناسب برای قهوه‌های تخصصی",
@@ -77,7 +66,7 @@ export const products: Product[] = [
         title: "Sugar Free",
         slug: "sugar-free",
         price: 105000,
-        image: "/images/sugar-free.png",
+        image: "/images/sugar-free.jpeg",
         imageAlt: "قهوه بدون شکر مناسب رژیم غذایی",
         category: "special",
         description: "قهوه بدون شکر با طعمی عالی، مناسب برای افرادی که مراقب سلامتی خود هستند",
@@ -89,7 +78,7 @@ export const products: Product[] = [
         title: "Turkish Coffee",
         slug: "turkish-coffee",
         price: 80000,
-        image: "/images/turkish.png",
+        image: "/images/turkish.webp",
         imageAlt: "قهوه ترک سنتی با کف غلیظ",
         category: "traditional",
         description: "قهوه ترک سنتی به روش اصیل، با کف غلیظ و عطر فوق‌العاده",
@@ -101,7 +90,7 @@ export const products: Product[] = [
         title: "French Press",
         slug: "french-press",
         price: 150000,
-        image: "/images/french.png",
+        image: "/images/french.jpg",
         imageAlt: "قهوه فرنچ پرس با دانه‌های درشت",
         category: "brewing",
         description: "قهوه فرنچ پرس با دانه‌های درشت و طعمی غنی، تجربه‌ای متفاوت از قهوه",
@@ -113,7 +102,7 @@ export const products: Product[] = [
         title: "Mixed Blend",
         slug: "mixed-blend",
         price: 160000,
-        image: "/images/mixed.png",
+        image: "/images/mixed.jpg",
         imageAlt: "ترکیب خاص چند نوع قهوه",
         category: "blend",
         description: "ترکیب خاصی از چند نوع قهوه عربیکا و روبوستا، طعمی متعادل و منحصربه‌فرد",
@@ -125,7 +114,7 @@ export const products: Product[] = [
         title: "Dark Roast",
         slug: "dark-roast",
         price: 170000,
-        image: "/images/dark.png",
+        image: "/images/dark.jpg",
         imageAlt: "قهوه دارک رست با بوداده تیره",
         category: "beans",
         description: "قهوه دارک رست با بوداده تیره و طعمی تلخ و قوی، محبوب طرفداران قهوه‌های غلیظ",

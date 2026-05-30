@@ -7,7 +7,7 @@ export default defineEventHandler((event) => {
     if (!product) {
         throw createError({
             statusCode: 404,
-            statusMessage: "Product not found",
+            statusMessage: "محصولی یافت نشد",
         })
     }
 

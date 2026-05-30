@@ -2,7 +2,15 @@
 </script>
 
 <template>
-  <footer class="bg-stone-800 text-stone-300">
+  <footer class="relative text-stone-300">
+    <!-- background image -->
+    <div
+        class="absolute inset-0 bg-cover bg-center opacity-10 bg-[url('/images/footer.webp')]"
+    ></div>
+
+    <!-- dark overlay -->
+    <div class="absolute inset-0 "></div>
+
     <div class="container mx-auto px-4 py-8">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div>
