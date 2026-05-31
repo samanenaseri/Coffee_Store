@@ -4,16 +4,16 @@ defineProps<{
 }>()
 </script>
 <template>
-  <article class="bg-[#2D1C07] rounded-lg shadow-lg overflow-hidden sm:rounded-md">
+  <article class="rounded-lg shadow-lg overflow-hidden sm:rounded-md ">
     <img
         :src="product.image"
         :alt="product.imageAlt"
         class="w-full h-48 object-cover"
         loading="lazy"
     />
-    <div class="p-4">
-      <span class="text-yellow-500 text-sm">★ {{ product.rating }}</span>
-      <h2 class="font-semibold text-stone-800">
+    <div class="p-4 bg-card">
+      <span class="text-yellow-500 text-sm prd-title">★ {{ product.rating }}</span>
+      <h2 class="font-semibold text-text">
         <NuxtLink :to="`/products/${product.slug}`">
           {{ product.title }}
         </NuxtLink>

@@ -1,4 +1,5 @@
 export default defineNuxtConfig({
+
   modules: ["@nuxtjs/tailwindcss"],
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
@@ -8,6 +9,7 @@ export default defineNuxtConfig({
       darkMode: "class",
     },
   },
+  css: ['~/assets/styles/main.scss'],
 
   app: {
     head: {
@@ -29,6 +31,7 @@ export default defineNuxtConfig({
         { name: "twitter:title", content: "قهوه‌فروشی | Coffee Store" },
         { name: "twitter:description", content: "فروشگاه تخصصی قهوه با بهترین کیفیت" },
       ],
+
       link: [
         { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
       ],

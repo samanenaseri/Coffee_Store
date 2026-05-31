@@ -30,7 +30,7 @@ useHead({
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col bg-stone-50 text-stone-800 dark:bg-stone-950 dark:text-stone-200">
+  <div class="min-h-screen flex flex-col bg-bg">
     <AppHeader />
     <main class="flex-1">
       <slot />

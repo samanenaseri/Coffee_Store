@@ -9,11 +9,15 @@ export const useTheme = () => {
 
     function applyTheme(mode: Theme) {
         if (import.meta.client) {
-            document.documentElement.classList.toggle("dark", mode === "dark")
+            const html = document.documentElement
+
+            html.classList.remove('light', 'dark')
+            html.classList.add(mode)
         }
     }
 
     const setTheme = (mode: Theme) => {
+
         colorMode.value = mode
         applyTheme(mode)
         try {
@@ -42,6 +46,8 @@ export const useTheme = () => {
     watch(isDark, (val) => {
         if (import.meta.client) {
             document.documentElement.classList.toggle("dark", val)
+        }else {
+            document.documentElement.classList.toggle("light", val)
         }
     })
 

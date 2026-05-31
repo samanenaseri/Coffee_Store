@@ -1,0 +1,35 @@
+:root {
+  --color-bg: #FFFDD0;        /* قهوه‌ای خیلی تیره (almost black coffee) */
+  --color-card: #D8D0A8;   /* کارت */
+  --color-divider: #725444;   /* کارت */
+  --color-text: #271D1B;      /* کرم روشن */
+  --color-lightText: #8F7265;     /* متن کم‌رنگ */
+  --color-border: #B0A280;    /* مرز */
+  --color-hover: #725444;   /* طلایی گرم */
+  --color-secondary: #FFFDD0; /* قهوه‌ای متوسط */
+  --color-accent: #D8D0A8;
+}
+
+.dark {
+  --color-bg: #0C0908;        /* قهوه‌ای خیلی تیره (almost black coffee) */
+  --color-card: #251C19;   /* کارت */
+  --color-divider: #F2E9E4;   /* کارت */
+  --color-text: #C9ADA7;      /* کرم روشن */
+  --color-lightText: #8F7265;     /* متن کم‌رنگ */
+  --color-border: #725444;    /* مرز */
+  --color-hover: #271D1B;   /* طلایی گرم */
+  --color-secondary: #F2E9E4; /* قهوه‌ای متوسط */
+  --color-accent: #8F7265;
+}
+
+.light {
+  --color-bg: #F6E9D9;        /* قهوه‌ای خیلی تیره (almost black coffee) */
+  --color-card: #ffff;   /* کارت */
+  --color-divider: #725444;   /* کارت */
+  --color-text: #271D1B;      /* کرم روشن */
+  --color-lighttext: #8F7265;     /* متن کم‌رنگ */
+  --color-border: #B0A280;    /* مرز */
+  --color-hover: #725444;   /* طلایی گرم */
+  --color-secondary: #FFFDD0; /* قهوه‌ای متوسط */
+  --color-accent: #D8D0A8;
+}

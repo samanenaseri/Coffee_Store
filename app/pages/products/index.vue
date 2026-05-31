@@ -14,7 +14,7 @@ const { products, pending, error } = useProducts()
         <div v-for="n in 6" :key="n" class="animate-pulse bg-stone-200 rounded-lg h-64" />
       </div>
 
-      <div v-else class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div v-else class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 px-10">
         <ProductCard
             v-for="product in products"
             :key="product.id"
