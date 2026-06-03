@@ -4,18 +4,18 @@ defineProps<{
 }>()
 </script>
 <template>
-  <article class="bg-card rounded-lg shadow-lg overflow-hidden sm:rounded-md p-5">
+  <article class="bg-bg rounded-lg  overflow-hidden sm:rounded-md p-5 card-des">
     <div class="rounded-lg">
       <img
           :src="gallery.image"
           :alt="gallery.imageAlt"
-          class="w-full h-48 object-cover"
+          class="rounded-md w-full h-48 object-cover"
           loading="lazy"
       />
     </div>
 
     <div class="p-4 ">
-      <h2 class="font-semibold text-text text-center">
+      <h2 class=" font-semibold text-text text-center">
         <NuxtLink :to="`/gallery/${gallery.slug}`">
           {{ gallery.title }}
         </NuxtLink>

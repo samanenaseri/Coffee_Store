@@ -1,6 +1,47 @@
+@font-face {
+  font-family: 'iranyekan';
+  src: url('~/assets/fonts/iranyekan/woff2/iranyekanwebregular.woff2') format('woff2'),
+  url('~/assets/fonts/iranyekan/woff/iranyekanwebregular.woff') format('woff'),
+  url('~/assets/fonts/iranyekan/ttf/iranyekanwebregular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'iranyekan';
+  src: url('~/assets/fonts/iranyekan/woff2/iranyekanweblight.woff2') format('woff2'),
+  url('~/assets/fonts/iranyekan/woff/iranyekanweblight.woff') format('woff'),
+  url('~/assets/fonts/iranyekan/ttf/iranyekanweblight.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'iranyekan';
+  src: url('~/assets/fonts/iranyekan/woff2/iranyekanwebbold.woff2') format('woff2'),
+  url('~/assets/fonts/iranyekan/woff/iranyekanwebbold.woff') format('woff'),
+  url('~/assets/fonts/iranyekan/ttf/iranyekanwebbold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+html,
+body,
+#__nuxt {
+  font-family: 'iranyekan', sans-serif;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
 :root {
   --color-bg: #FFFDD0;        /* قهوه‌ای خیلی تیره (almost black coffee) */
-  --color-card: #D8D0A8;   /* کارت */
+  --color-primary: #F2E9E4;   /* کارت */
   --color-divider: #725444;   /* کارت */
   --color-text: #271D1B;      /* کرم روشن */
   --color-lightText: #8F7265;     /* متن کم‌رنگ */
@@ -15,11 +56,16 @@
   --color-card: #251C19;   /* کارت */
   --color-divider: #F2E9E4;   /* کارت */
   --color-text: #C9ADA7;      /* کرم روشن */
-  --color-lightText: #8F7265;     /* متن کم‌رنگ */
-  --color-border: #725444;    /* مرز */
+  --color-lightText: #BE9F93;     /* متن کم‌رنگ */
+  --color-border: #bb9b89;    /* مرز */
   --color-hover: #271D1B;   /* طلایی گرم */
   --color-secondary: #F2E9E4; /* قهوه‌ای متوسط */
   --color-accent: #8F7265;
+  --color-background:#3B302C;
+  --color-cups: #EFDAD5;
+  --color-delivery: #271D1B;
+  --color-menu-card: #50423C;
+  --color-items:rgb(88, 69, 62);
 }
 
 .light {
@@ -27,9 +73,47 @@
   --color-card: #ffff;   /* کارت */
   --color-divider: #725444;   /* کارت */
   --color-text: #271D1B;      /* کرم روشن */
-  --color-lighttext: #8F7265;     /* متن کم‌رنگ */
-  --color-border: #B0A280;    /* مرز */
+  --color-lightText: #723A25;     /* متن کم‌رنگ */
+  --color-border: #331104;    /* مرز */
   --color-hover: #725444;   /* طلایی گرم */
   --color-secondary: #FFFDD0; /* قهوه‌ای متوسط */
   --color-accent: #D8D0A8;
+  --color-background:#D8861A;
+  --color-cups: #271D1B;
+  --color-delivery: #edd4b6;
+  --color-menu-card: #D9B385;
+  --color-items: rgb(241, 203, 157);
 }
+
+.dark {
+  .coffee-cup-color{
+    fill: white;
+  }
+.card-des {
+  border: 3px solid #1f1815;
+}
+  .card-des:hover {
+    border: 3px solid #3a2924;
+    box-shadow: 0 -7px 6px 0 #1d1b18;
+    transition: all 0.5s;
+  }
+
+}
+.light {
+  .coffee-cup-color{
+    fill: black;
+  }
+.card-des {
+  border: 3px solid #7a5b3630;
+  // transition: all 2s;
+}
+  .card-des:hover {
+    border: 3px solid #edd4b6;
+    box-shadow: 0 -7px 6px 0 #dbcfc1;
+    transition: all 0.5s;
+    /* transition: 1.5ms ease-in all; */
+  }
+}
+
+
+//transition: all 0.5s;

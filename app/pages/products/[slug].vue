@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type {Product} from "#shared/product";
+
 const route = useRoute()
 const slug = route.params.slug as string
 

@@ -14,14 +14,22 @@ const config: Config = {
                 bg: "var(--color-bg)",
                 text: "var(--color-text)",
                 lightText: "var(--color-lightText)",
+                primary: "var(--color-primary)",
                 card: "var(--color-card)",
                 divider: "var(--color-divider)",
                 border: "var(--color-border)",
                 hover: "var(--color-hover)",
                 secondary: "var(--color-secondary)",
                 accent: "var(--color-accent)",
-
+                background: "var(--color-background)",
+                cups: "var(--color-cups)",
+                delivery: "var(--color-delivery)",
+                menuCard: "var(--color-menu-card)",
+                items: "var(--color-items)",
             },
+            fontFamily: {
+                iranyekan: ['iranyekan']
+            }
         },
     },
 

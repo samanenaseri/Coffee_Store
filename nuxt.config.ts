@@ -1,3 +1,4 @@
+import svgLoader from 'vite-svg-loader'
 export default defineNuxtConfig({
 
   modules: ["@nuxtjs/tailwindcss"],
@@ -8,6 +9,11 @@ export default defineNuxtConfig({
     config: {
       darkMode: "class",
     },
+  },
+  vite: {
+    plugins: [
+      svgLoader()
+    ]
   },
   css: ['~/assets/styles/main.scss'],
 
@@ -33,7 +39,7 @@ export default defineNuxtConfig({
       ],
 
       link: [
-        { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+        { rel: "icon", type: "image/x-icons", href: "/favicon.ico" },
       ],
     },
   },
