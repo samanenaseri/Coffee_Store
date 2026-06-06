@@ -1,0 +1,10 @@
+export interface Testimonial {
+    id: number
+    name: string
+    role?: string
+    comment: string
+    rating: number
+    image?: string
+    isActive: boolean
+    sortOrder: number
+}

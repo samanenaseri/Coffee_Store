@@ -26,6 +26,7 @@ const config: Config = {
                 delivery: "var(--color-delivery)",
                 menuCard: "var(--color-menu-card)",
                 items: "var(--color-items)",
+                testimonial: "var(--color-testimonial)",
             },
             fontFamily: {
                 iranyekan: ['iranyekan']
