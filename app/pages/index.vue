@@ -6,6 +6,7 @@ import PicSection from "~/components/ui/mainPage/PicSection.vue";
 import MenuSection from "~/components/ui/mainPage/MenuSection.vue";
 import ProductSection from "~/components/ui/mainPage/productSection.vue";
 import TestimonialSection from "~/components/ui/mainPage/testimonialSection.vue";
+import ArticlesSection from "~/components/ui/mainPage/articlesSection.vue";
 
 useSeoMeta({
   title: "قهوه‌فروشی | Coffee Store",
@@ -17,7 +18,7 @@ useSeoMeta({
 
 
   <template>
-    <main class="bg-white dark:bg-stone-900">
+    <section>
       <HeroVideo />
       <DescribeSection></DescribeSection>
       <productSection></productSection>
@@ -26,16 +27,8 @@ useSeoMeta({
       <TestimonialSection></TestimonialSection>
       <gallery></gallery>
       <PicSection></PicSection>
-      <div class="container mx-auto px-4 py-12">
-        <h1 class="text-4xl font-bold text-stone-800 text-center">
-          به قهوه‌فروشی خوش آمدید
-        </h1>
-
-        <p class="text-stone-600 text-center mt-4 text-lg">
-          بهترین قهوه‌ها را از ما بخواهید
-        </p>
-      </div>
-    </main>
+      <articlesSection></articlesSection>
+    </section>
   </template>
 
 

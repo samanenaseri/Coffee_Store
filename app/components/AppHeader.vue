@@ -11,7 +11,7 @@
     <div class="container mx-auto px-4">
       <nav class="flex items-center justify-between h-16" aria-label="main navigation">
         <NuxtLink to="/" class="text-xl font-bold text-amber-800 dark:text-amber-400">
-          <Logo :class="['h-24 w-auto text-lightText',
+          <Logo :class="['h-24 w-auto text-lightText mt-3 mb-3',
                 isScrolled ? 'text-lightText': 'text-stone-300 dark:text-text'] " />
         </NuxtLink>
         <div class="flex items-center gap-6">

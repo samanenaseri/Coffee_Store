@@ -1,6 +1,8 @@
 <template>
-  <section class=" grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 bg-background py-20 ">
-    <div class="flex flex-col px-10 gap-10 ">
+  <section class="bg-background py-20">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div class="flex flex-col gap-10 ">
       <p class="font-bold sm:text-3xl text-3xl text-cups">طعم خوب لحظه ها با قهوه ی ناب</p>
       <p class="font-normal sm:text-lg text-base text-lightText">قهوه فقط یک نوشیدنی نیست؛ برای خیلی‌ها شروع آرامِ یک روز شلوغ است.
         عطرش فضا را پر می‌کند و طعمش انگار چند دقیقه به آدم فرصت مکث و نفس کشیدن می‌دهد.</p>
@@ -38,7 +40,7 @@
         </div>
       </div>
     </div>
-    <div class="flex w-2/3 py-12 items-end justify-end">
+    <div class="flex py-12 items-end justify-end">
       <div class="relative w-[400px] h-[400px]">
         <!-- دایره بزرگ -->
         <div class="w-[400px] h-[400px] rounded-full bg-stone-700 border border-border border-[12px]">
@@ -66,6 +68,8 @@
               alt=""
           />
         </div>
+      </div>
+    </div>
       </div>
     </div>
   </section>

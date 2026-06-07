@@ -46,7 +46,7 @@
           <div
               v-if="activeCategory"
               :key="activeCategory.slug"
-              class="mx-auto max-w-5xl rounded-lg  p-6 shadow-xl ring-1 ring-black/5 backdrop-blur bg-delivery dark:bg-background dark:ring-white/10"
+              class="rounded-lg p-6 shadow-xl ring-1 ring-black/5 backdrop-blur bg-bg dark:bg-background dark:ring-white/10"
           >
             <div class="mb-6 flex flex-col gap-3 border-b border-stone-200 pb-5 dark:border-stone-700 sm:flex-row sm:items-center sm:justify-between">
               <div >
@@ -83,7 +83,7 @@
               <article
                   v-for="item in activeCategory.items"
                   :key="item.id"
-                  class="group relative rounded-lg p-5 transition-all duration-300 hover:-translate-y-1  hover:shadow-md bg-menuCard "
+                  class="group relative rounded-lg p-5 transition-all duration-300 hover:-translate-y-1  hover:shadow-md bg-menu "
                   :class="!item.isAvailable ? 'opacity-30' : ''"
               >
                 <div class="mb-3 flex items-start justify-between gap-3">

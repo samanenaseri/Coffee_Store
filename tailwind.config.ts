@@ -24,7 +24,7 @@ const config: Config = {
                 background: "var(--color-background)",
                 cups: "var(--color-cups)",
                 delivery: "var(--color-delivery)",
-                menuCard: "var(--color-menu-card)",
+                menu: "var(--color-menu)",
                 items: "var(--color-items)",
                 testimonial: "var(--color-testimonial)",
             },

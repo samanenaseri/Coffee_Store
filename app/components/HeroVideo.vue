@@ -30,7 +30,7 @@
         <div class="absolute bottom-0">
           <button
               type="button"
-              class="flex items-center justify-center w-12 h-12 rounded-full bg-amber-700 text-white animate-bounce shadow-lg"
+              class="flex items-center justify-center w-12 h-12 rounded-full bg-stone-400 text-text animate-bounce shadow-lg"
               aria-label="اسکرول به پایین"
           >
             <svg

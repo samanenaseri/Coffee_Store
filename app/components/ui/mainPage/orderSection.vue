@@ -1,7 +1,7 @@
 
 <template>
 <section>
-  <div class="container mx-auto mt-20 grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 justify-items-center gap-10">
+  <div class="container mx-auto px-4 mt-20 grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-1 justify-items-center gap-10">
     <div class="border border-dashed border-border rounded-lg border-2 bg-delivery">
       <div class="flex items-start justify-around gap-4 p-8">
         <Order class="h-16 w-16 text-cups"></Order>
