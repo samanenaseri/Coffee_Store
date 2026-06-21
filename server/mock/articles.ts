@@ -20,6 +20,7 @@ export const mockArticles: Article[] = [
       در نهایت، تجربه و تست کردن بهترین معلم شماست. با تغییر مقدار قهوه، زمان دم‌آوری و درجه آسیاب می‌توانید به طعمی برسید که دقیقاً با سلیقه شما هماهنگ است.
     `,
         image: "/images/articles/blog-01.jpg",
+        imageAlt:"راز یک فنجان قهوه عالی",
         author: "مریم احمدی",
         createdAt: "2026-06-06",
         isActive: true,
@@ -42,6 +43,7 @@ export const mockArticles: Article[] = [
       اگر می‌خواهید طعم قهوه ثابت و تازه بماند، مقدار مصرف یک یا دو هفته را جدا کنید و باقی دانه‌ها را در بسته‌بندی اصلی یا ظرف مناسب نگه دارید.
     `,
         image: "/images/articles/blog-02.jpg",
+        imageAlt:" نکته برای نگهداری دانه‌های قهوه",
         author: "علی رضایی",
         createdAt: "2026-06-05",
         isActive: true,
@@ -62,6 +64,7 @@ export const mockArticles: Article[] = [
       امروز قهوه در ایران فقط یک نوشیدنی نیست؛ بلکه برای بسیاری از افراد نشانه‌ای از سلیقه، آرامش، تمرکز و تجربه‌ای متفاوت در طول روز است.
     `,
         image: "/images/articles/blog-03.jpg",
+        imageAlt:" تاریخچه قهوه در ایران",
         author: "سارا محمدی",
         createdAt: "2026-06-04",
         isActive: true,
@@ -82,6 +85,7 @@ export const mockArticles: Article[] = [
       برای دوستداران قهوه، لاته و کاپوچینو در زمستان انتخاب‌های محبوبی هستند، چون ترکیب اسپرسو و شیر گرم حس لطیف و دلنشینی ایجاد می‌کند.
     `,
         image: "/images/articles/blog-04.jpg",
+        imageAlt:" نوشیدنی‌های گرم برای زمستان",
         author: "رضا کریمی",
         createdAt: "2026-06-03",
         isActive: true,
@@ -104,6 +108,7 @@ export const mockArticles: Article[] = [
       در نهایت انتخاب کیک و قهوه کاملاً به سلیقه شخصی شما بستگی دارد. بهترین راه این است که ترکیب‌های مختلف را امتحان کنید و ببینید کدام طعم برای شما دلنشین‌تر است.
     `,
         image: "/images/articles/blog-05.jpg",
+        imageAlt:"انتخاب کیک مناسب با قهوه",
         author: "مهدیه احمدی",
         createdAt: "2026-06-02",
         isActive: true,

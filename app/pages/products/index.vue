@@ -6,9 +6,8 @@ const { products, pending, error } = useProducts()
 
 <template>
   <section>
-    <div class="container mx-auto px-4 py-8">
-      <h1 class="text-3xl font-bold text-stone-800">محصولات</h1>
-      <p class="text-stone-500 mt-2">همه محصولات ما</p>
+    <div class="container mx-auto px-4 py-20">
+      <h1 class="text-3xl text-center font-bold text-text">محصولات</h1>
 
       <div v-if="pending" class="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div v-for="n in 6" :key="n" class="animate-pulse bg-stone-200 rounded-lg h-64" />

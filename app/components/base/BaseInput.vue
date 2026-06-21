@@ -56,6 +56,7 @@ const props = withDefaults(
       type: 'text',
       tooltip: '',
       wrapperClass: 'w-full',
+      placeholder:''
     }
 )
 
@@ -77,8 +78,8 @@ const handleBlur = () => {
 }
 
 const inputClasses = computed(() => [
-  'h-10 rounded-[8px] bg-select-btn px-3 py-2 text-input main-input transition-colors duration-200 input-focus-warning w-full',
-  'placeholder-gray-400 input-placeholder focus:outline-none ' + (props.customClass || ''),
+  'h-12 resize-none rounded-lg border border-background bg-input px-4 py-2 text-sm leading-8 text-stone-800 outline-none  placeholder:text-divider focus:border-testimonial transition-colors duration-200  w-full',
+    + (props.customClass || ''),
   props.error
       ? 'border-red-500 focus:border-red-500'
       : 'border-gray-300 input-hover-warning ' + (props.customClass || ''),

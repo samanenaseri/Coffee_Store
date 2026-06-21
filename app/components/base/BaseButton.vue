@@ -1,68 +1,79 @@
 <template>
   <button
+      :type="type"
       :class="[
-      'inline-flex items-center justify-center font-medium gap-2 rounded-lg transition',
+      baseClasses,
       sizeClasses[size],
       variantClasses[variant],
+      fullWidth ? 'w-full' : '',
       className,
-         { 'cursor-not-allowed disabled-btn': disabled || loading },
+      { 'cursor-not-allowed disabled-btn opacity-60': disabled || loading },
     ]"
-      @click="handleClick"
       :disabled="disabled || loading"
+      @click="handleClick"
   >
-      <span v-if="loading" class="flex items-center gap-2">
-      <SpinnerIcon/>
-     </span>
-
-    <span v-if="startIcon" class="flex items-center">
-      <component :is="startIcon"/>
+    <span v-if="loading" class="flex items-center gap-2">
+      <SpinnerIcon />
     </span>
 
-    <slot></slot>
+    <span v-if="startIcon && !loading" class="flex items-center">
+      <component :is="startIcon" />
+    </span>
 
-    <span v-if="endIcon" class="flex items-center">
-      <component :is="endIcon"/>
+    <slot />
+
+    <span v-if="endIcon && !loading" class="flex items-center">
+      <component :is="endIcon" />
     </span>
   </button>
 </template>
+
 <script setup lang="ts">
-import { computed } from 'vue'
-import SpinnerIcon from "~/components/ui/SpinnerIcon.vue";
+import SpinnerIcon from '~/components/ui/SpinnerIcon.vue'
+import type { Component } from 'vue'
 
 type ButtonSize = 'sm' | 'md' | 'lg'
-type ButtonVariant = 'primary' | 'danger' | 'outline'
+type ButtonVariant = 'primary' | 'danger' | 'outline' | 'text' | 'dark'
+type ButtonType = 'button' | 'submit' | 'reset'
 
 const props = withDefaults(
     defineProps<{
       size?: ButtonSize
       variant?: ButtonVariant
-      startIcon?: object | null
-      endIcon?: object | null
-      onClick?: (() => void) | null
+      type?: ButtonType
+      startIcon?: Component | null
+      endIcon?: Component | null
       className?: string
       disabled?: boolean
       loading?: boolean
+      fullWidth?: boolean
     }>(),
     {
       size: 'md',
       variant: 'primary',
+      type: 'button',
       startIcon: null,
       endIcon: null,
-      onClick: null,
       className: '',
       disabled: false,
       loading: false,
+      fullWidth: false,
     }
 )
 
-// کلاس‌های اندازه
+const emit = defineEmits<{
+  click: [event: MouseEvent]
+}>()
+
+const baseClasses =
+    'inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-300'
+
 const sizeClasses: Record<ButtonSize, string> = {
-  sm: 'px-4 py-[6px] text-[16px]',
-  md: 'px-5 py-[11px] text-[18px]',
-  lg: 'px-5 py-[17px] text-[20px]',
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-5 py-[11px] text-base',
+  lg: 'px-6 py-4 text-lg',
 }
 
-// کلاس‌های variant
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
       'main-button txt-btn shadow-theme-xs hover:bg-brand-600 disabled:bg-brand-300',
@@ -71,18 +82,18 @@ const variantClasses: Record<ButtonVariant, string> = {
       'button-danger-bg text-white hover:bg-red-700',
 
   outline:
-      'bg-white text-gray-700 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03] dark:hover:text-gray-300',
+      'bg-transparent text-text ring-1 ring-inset ring-lightText hover:bg-background',
+
+  text:
+      'bg-transparent text-text hover:opacity-80',
+
+  dark:
+      'bg-text text-white hover:opacity-90',
 }
 
-// هندلر کلیک
-const handleClick = () => {
-  if (!props.disabled && props.onClick) {
-    props.onClick()
-  }
-}
+const handleClick = (event: MouseEvent) => {
+  if (props.disabled || props.loading) return
 
-// کلاس نهایی
-const buttonClass = computed(() => {
-  return `${sizeClasses[props.size]} ${variantClasses[props.variant]} ${props.className}`
-})
+  emit('click', event)
+}
 </script>

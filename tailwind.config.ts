@@ -1,12 +1,7 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const config = {
     darkMode: "class",
-
-    content: [
-        "./index.html",
-        "./src/**/*.{js,ts,jsx,tsx}",
-    ],
 
     theme: {
         extend: {
@@ -27,6 +22,12 @@ const config: Config = {
                 menu: "var(--color-menu)",
                 items: "var(--color-items)",
                 testimonial: "var(--color-testimonial)",
+                input: "var(--color-input)",
+                navbar: "var(--color-navbar)",
+                backCup: "var(--color-backCup)",
+                cupHover: "var(--color-cupHover)",
+                liquid: "var(--color-liquid)",
+
             },
             fontFamily: {
                 iranyekan: ['iranyekan']

@@ -1,7 +1,9 @@
 import svgLoader from 'vite-svg-loader'
 export default defineNuxtConfig({
 
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/tailwindcss",
+    '@pinia/nuxt'
+  ],
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 

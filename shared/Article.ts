@@ -5,6 +5,7 @@ export interface Article {
     description: string
     content: string
     image?: string
+    imageAlt:string,
     author?: string
     createdAt?: string
     isActive: boolean

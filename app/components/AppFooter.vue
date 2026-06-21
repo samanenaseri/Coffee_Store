@@ -44,7 +44,7 @@ import {RiMailFill,RiPhoneFill, RiMapPinFill} from '@remixicon/vue'
             </li>
 
             <li>
-              <NuxtLink to="/contact" class="inline-block hover:text-amber-400 hover:scale-105 transition-all duration-300">
+              <NuxtLink to="/images/contact" class="inline-block hover:text-amber-400 hover:scale-105 transition-all duration-300">
                 تماس با ما
               </NuxtLink>
             </li>

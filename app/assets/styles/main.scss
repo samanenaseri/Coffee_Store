@@ -40,15 +40,31 @@ select {
   font-family: inherit;
 }
 :root {
-  --color-bg: #FFFDD0;        /* قهوه‌ای خیلی تیره (almost black coffee) */
-  --color-primary: #F2E9E4;   /* کارت */
-  --color-divider: #725444;   /* کارت */
-  --color-text: #271D1B;      /* کرم روشن */
-  --color-lightText: #8F7265;     /* متن کم‌رنگ */
-  --color-border: #B0A280;    /* مرز */
-  --color-hover: #725444;   /* طلایی گرم */
-  --color-secondary: #FFFDD0; /* قهوه‌ای متوسط */
+  --color-bg: #F6E9D9;
+  --color-primary: #F2E9E4;
+  --color-divider: #725444;
+  --color-text: #5A403B;
+  --color-lightText: #723A25;
+  --color-border: #331104;
+  --color-hover: #725444;
+  --color-secondary: #FFFDD0;
   --color-accent: #D8D0A8;
+  --color-background: #DECEBA;
+  --color-card: #ffff;
+  --color-cups: #271D1B;
+  --color-delivery: #edd4b6;
+  --color-menu: #FDF9F4;
+  --color-items: rgb(241, 203, 157);
+  --color-testimonial: #998a77;
+  --color-input: rgba(250, 250, 250, 0.5);
+  --color-navbar: #ae9c86;
+  --color-backCup: #DECEBA;
+  --color-cupHover: #5b341c;
+  --color-liquid: #5b341c;
+  --color-blueLine:rgb(0, 90, 238);
+  --color-orangeLine:rgb(197, 113, 5);
+  --color-purple:rgb(131, 22, 236);
+
 }
 
 .dark {
@@ -66,7 +82,12 @@ select {
   --color-delivery: #271D1B;
   --color-menu: #50423C;
   --color-items:rgb(88, 69, 62);
-  --color-testimonial:#4b433a;;
+  --color-testimonial:#4b433a;
+  --color-input:#9B8783;
+  --color-navbar:#564843;
+  --color-backCup:#6d523e;
+  --color-cupHover:#ae734f;
+  --color-liquid:#ae734f;
 
 }
 
@@ -74,7 +95,7 @@ select {
   --color-bg: #F6E9D9;        /* قهوه‌ای خیلی تیره (almost black coffee) */
   --color-card: #ffff;   /* کارت */
   --color-divider: #725444;   /* کارت */
-  --color-text: #271D1B;      /* کرم روشن */
+  --color-text: #5A403B;      /* کرم روشن */
   --color-lightText: #723A25;     /* متن کم‌رنگ */
   --color-border: #331104;    /* مرز */
   --color-hover: #725444;   /* طلایی گرم */
@@ -86,6 +107,11 @@ select {
   --color-menu: #FDF9F4;
   --color-items: rgb(241, 203, 157);
   --color-testimonial:#998a77;
+  --color-input:rgba(250, 250, 250,0.5);
+  --color-navbar:#ae9c86;
+  --color-backCup:#DECEBA;
+  --color-cupHover:#5b341c;
+  --color-liquid:#5b341c;
 
 }
 
@@ -117,7 +143,41 @@ select {
     transition: all 0.5s;
     /* transition: 1.5ms ease-in all; */
   }
+
+
 }
 
+.inner-nav {
+  background: var(--color-background);
+  opacity: 80%;
+}
 
-//transition: all 0.5s;
+.main-button {
+  background-color: var(--color-text) ;
+  border-color: var(--color-text);
+  color: white;
+
+  &:hover {
+    background-color: var(--color-lightText) !important;
+    border: 0;
+    color: white;
+  }
+}
+
+.step-fade-enter-active,
+.step-fade-leave-active {
+  transition: all 0.35s ease;
+}
+
+.step-fade-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.step-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.step-fade-enter-active {
+  transition-delay: 0.05s;
+}

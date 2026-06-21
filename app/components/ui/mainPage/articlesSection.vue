@@ -16,11 +16,12 @@
           <NuxtLink
               v-for="article in articles.slice(1,5)"
               :key="article.id"
+              :to="`/articles/${article.slug}`"
               class="group flex rounded-2xl overflow-hidden shadow hover:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
           >
             <img
                 :src="article.image"
-                :alt="article.title"
+                :alt="article.imageAlt"
                 class="w-full object-cover"
             />
             <div class="p-4 bg-transparent">
@@ -38,7 +39,7 @@
         >
           <img
               :src="articles[0]?.image"
-              :alt="articles[0]?.title"
+              :alt="articles[0]?.imageAlt"
               class="w-full h-[680px] object-cover"
           />
           <div class="absolute inset-0 bg-black/30 flex flex-col justify-end p-6">
