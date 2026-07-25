@@ -1,41 +1,32 @@
 <template>
-  <section class="bg-background py-20">
+  <section ref="sectionRef" class="bg-background py-20">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
     <div class="flex flex-col gap-10 ">
-      <p class="font-bold sm:text-3xl text-3xl text-cups">طعم خوب لحظه ها با قهوه ی ناب</p>
-      <p class="font-normal sm:text-lg text-base text-lightText">قهوه فقط یک نوشیدنی نیست؛ برای خیلی‌ها شروع آرامِ یک روز شلوغ است.
-        عطرش فضا را پر می‌کند و طعمش انگار چند دقیقه به آدم فرصت مکث و نفس کشیدن می‌دهد.</p>
+      <p class="font-bold sm:text-3xl text-3xl text-cups">{{ heading }}</p>
+      <p class="font-normal sm:text-lg text-base text-lightText">{{ paragraph }}</p>
 
      <div class="flex flex-cols-2 gap-10  items-start justify-start text-l font-bold">
-        <div class="flex flex-1 items-start gap-6">
-       <div class="flex justify-center items-start "><TeaCupIcon class="h-16 w-16 text-cups "/></div>
+        <div v-for="(drink, i) in displayedDrinksTop" :key="i" class="flex flex-1 items-start gap-6">
+       <div class="flex justify-center items-start ">
+         <img v-if="isImageUrl(drink.icon)" :src="drink.icon" :alt="drink.title" class="h-16 w-16 object-contain" />
+         <component v-else :is="getDrinkIcon(drink.icon)" class="h-16 w-16 text-cups" />
+       </div>
        <div class="flex flex-col items-start gap-6">
-         <p class="text-lg font-bold text-cups"> دمنوش معطر </p>
-         <p class="text-base font-medium text-lightText"> نوشیدنی گرم و خوش‌عطری که حس آرامش و تازگی می‌دهد. </p>
+         <p class="text-lg font-bold text-cups">{{ drink.title }}</p>
+         <p class="text-base font-medium text-lightText">{{ drink.description }}</p>
        </div>
      </div>
-       <div class="flex flex-1 items-start gap-6">
-         <div class="flex justify-center items-start "><CoffeeCup class="h-16 w-16 text-cups "/></div>
-         <div class="flex flex-col items-start gap-6">
-           <p class="text-lg font-bold text-cups">  اسپرسو </p>
-           <p class="text-base font-medium text-lightText">  قهوه‌ای غلیظ و پرانرژی با طعمی عمیق و ماندگار. </p>
-         </div>
-       </div>
       </div>
       <div class="flex  flex-cols-2 gap-4 items-start justify-start text-l font-bold">
-        <div class="flex flex-1 items-start gap-6">
-          <div class="flex justify-center items-start "><ColdCoffee class="h-16 w-16 text-cups "/></div>
-          <div class="flex flex-col items-start gap-6">
-            <p class="text-lg font-bold text-cups" >  آیس کافی </p>
-            <p class="text-base font-medium text-lightText">  قهوه‌ای خنک و دل‌چسب، مناسب روزهای گرم. </p>
+        <div v-for="(drink, i) in displayedDrinksBottom" :key="i" class="flex flex-1 items-start gap-6">
+          <div class="flex justify-center items-start ">
+            <img v-if="isImageUrl(drink.icon)" :src="drink.icon" :alt="drink.title" class="h-16 w-16 object-contain" />
+            <component v-else :is="getDrinkIcon(drink.icon)" class="h-16 w-16 text-cups" />
           </div>
-        </div>
-        <div class="flex flex-1 items-start gap-6">
-          <div class="flex justify-center items-start "><Cuppoccino class="h-16 w-16 text-cups "/></div>
           <div class="flex flex-col items-start gap-6">
-            <p class="text-lg font-bold text-cups"> لاته </p>
-            <p class="text-base font-medium text-lightText">  ترکیب لطیف قهوه و شیر با طعمی نرم و خامه‌ای. </p>
+            <p class="text-lg font-bold text-cups">{{ drink.title }}</p>
+            <p class="text-base font-medium text-lightText">{{ drink.description }}</p>
           </div>
         </div>
       </div>
@@ -45,17 +36,23 @@
         <!-- دایره بزرگ -->
         <div class="w-[400px] h-[400px] rounded-full bg-stone-700 border border-border border-[12px]">
           <img
-              src="/images/woman-coffee.jpg"
+              :src="mainImage"
               class="w-full h-full object-cover rounded-full"
               alt=""
           />
         </div>
 
-        <!-- دایره کوچک -->
+        <!-- دایره عدد تجربه -->
         <div
             class="absolute -top-5 left-22 translate-x-1/3
-           w-40 h-40 rounded-full bg-card border border-border border-[12px]"
-        ></div>
+           w-40 h-40 rounded-full bg-card border border-border border-[12px]
+           flex flex-col items-center justify-center"
+        >
+          <span class="text-3xl font-black text-cups">+{{ animatedNumber }}</span>
+          <span class="text-xs text-lightText mt-1">{{ experienceLabel }}</span>
+        </div>
+
+        <!-- دایره چرخان -->
         <div
             class="absolute -bottom-10 left-10 -translate-x-1/2
            w-40 h-40 rounded-full overflow-hidden
@@ -63,7 +60,7 @@
          "
         >
           <img
-              src="/images/circle.webp"
+              :src="secondaryImage"
               class="w-full h-full object-cover animate-[spin_12s_linear_infinite]"
               alt=""
           />
@@ -80,7 +77,80 @@ import TeaCupIcon from '~/assets/icons/tea-cup.svg'
 import CoffeeCup from '~/assets/icons/coffee-cup.svg'
 import ColdCoffee from '~/assets/icons/cold-coffee.svg'
 import Cuppoccino from '~/assets/icons/cuppoccino.svg'
-</script>
-<style scoped>
 
-</style>
+const props = defineProps({
+  heading: { type: String, default: 'طعم خوب لحظه ها با قهوه ی ناب' },
+  paragraph: { type: String, default: 'قهوه فقط یک نوشیدنی نیست؛ برای خیلی‌ها شروع آرامِ یک روز شلوغ است. عطرش فضا را پر می‌کند و طعمش انگار چند دقیقه به آدم فرصت مکث و نفس کشیدن می‌دهد.' },
+  mainImage: { type: String, default: '/images/woman-coffee.jpg' },
+  secondaryImage: { type: String, default: '/images/circle.webp' },
+  experienceNumber: { type: Number, default: 7 },
+  experienceLabel: { type: String, default: 'سال تجربه' },
+  drinks: {
+    type: Array as () => { title: string; description: string; icon: string }[],
+    default: () => [
+      { title: 'دمنوش معطر', description: 'نوشیدنی گرم و خوش‌عطری که حس آرامش و تازگی می‌دهد.', icon: 'tea-cup' },
+      { title: 'اسپرسو', description: 'قهوه‌ای غلیظ و پرانرژی با طعمی عمیق و ماندگار.', icon: 'coffee-cup' },
+      { title: 'آیس کافی', description: 'قهوه‌ای خنک و دل‌چسب، مناسب روزهای گرم.', icon: 'cold-coffee' },
+      { title: 'لاته', description: 'ترکیب لطیف قهوه و شیر با طعمی نرم و خامه‌ای.', icon: 'cuppoccino' },
+    ]
+  },
+})
+
+const iconMap: Record<string, any> = {
+  'tea-cup': TeaCupIcon,
+  'coffee-cup': CoffeeCup,
+  'cold-coffee': ColdCoffee,
+  'cuppoccino': Cuppoccino,
+}
+
+const sectionRef = ref<HTMLElement | null>(null)
+const animatedNumber = ref(0)
+const hasAnimated = ref(false)
+
+function isImageUrl(icon: string): boolean {
+  if (!icon) return false
+  return icon.startsWith('/') || icon.startsWith('http') || icon.includes('.')
+}
+
+function getDrinkIcon(icon: string) {
+  return iconMap[icon] || TeaCupIcon
+}
+
+function animateCount(target: number) {
+  if (hasAnimated.value) return
+  hasAnimated.value = true
+  const duration = 2000
+  const startTime = performance.now()
+  const startVal = 0
+
+  function update(currentTime: number) {
+    const elapsed = currentTime - startTime
+    const progress = Math.min(elapsed / duration, 1)
+    const eased = 1 - Math.pow(1 - progress, 3)
+    animatedNumber.value = Math.round(startVal + (target - startVal) * eased)
+    if (progress < 1) {
+      requestAnimationFrame(update)
+    }
+  }
+
+  requestAnimationFrame(update)
+}
+
+onMounted(() => {
+  if (!sectionRef.value) return
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        animateCount(props.experienceNumber)
+        observer.disconnect()
+      }
+    },
+    { threshold: 0.3 }
+  )
+  observer.observe(sectionRef.value)
+  onUnmounted(() => observer.disconnect())
+})
+
+const displayedDrinksTop = computed(() => (props.drinks || []).slice(0, 2))
+const displayedDrinksBottom = computed(() => (props.drinks || []).slice(2, 4))
+</script>

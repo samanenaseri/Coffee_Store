@@ -1,14 +1,14 @@
-// composables/useTestimonials.ts
-
 import type { Testimonial } from "#shared/testimonial"
 
 export const useTestimonials = () => {
+    const { apiFetch } = useApi()
+
     const { data, pending, error } = useAsyncData(
         "testimonials",
-        () => $fetch<{ success: boolean; data: Testimonial[] }>("/api/testimonials")
+        () => apiFetch<Testimonial[]>('/testimonials'),
     )
 
-    const testimonials = computed(() => data.value?.data ?? [])
+    const testimonials = computed(() => data.value ?? [])
 
     return {
         testimonials,

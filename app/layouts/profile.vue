@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import ProfileSidebar from "~/components/ profile/ProfileSidebar.vue";
+import ProfileSidebar from "~/components/profile/ProfileSidebar.vue";
+
+useSeoMeta({
+  robots: "noindex, nofollow",
+})
 </script>
 <template>
   <div class="min-h-screen flex flex-col bg-bg">

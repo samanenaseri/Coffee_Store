@@ -7,10 +7,19 @@ import {
   RiInstagramLine,
   RiSendPlaneLine
 } from '@remixicon/vue'
+const { settings, fetchSettings } = useSettings()
+const { resolveUrl } = useImageUrl()
+await fetchSettings()
 
 useSeoMeta({
-  title: 'تماس با ما | قهوه‌فروشی',
-  description: 'راه‌های ارتباط با فروشگاه قهوه‌فروشی'
+  title: () => `${settings.value.contact_title} | قهوه‌فروشی`,
+  description: () => settings.value.contact_hero_description?.substring(0, 160),
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/contact` },
+  ],
 })
 
 const form = reactive({
@@ -18,6 +27,11 @@ const form = reactive({
   email: '',
   message: ''
 })
+
+const toPersianDigits = (str: string) => {
+  const persianDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹']
+  return str.replace(/\d/g, (d) => persianDigits[parseInt(d)])
+}
 
 const submitForm = () => {
   console.log('Contact form:', form)
@@ -29,37 +43,34 @@ const submitForm = () => {
     <section class="flex items-center gap-20 bg-gradient-to-b from-navbar to-bg">
       <div class="group h-[300px] w-[300px] overflow-hidden">
         <img
-            src="/images/cup-about.png"
-            alt="ارتباط با قهوه فروشی"
+            :src="resolveUrl(settings.contact_hero_image)"
+            :alt="settings.contact_title"
             class="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:rotate-[-10deg]"
         >
       </div>
-      <div class=" ">
+      <div>
         <h1 class="text-4xl font-bold text-text">
-          تماس با ما
+          {{ settings.contact_title }}
         </h1>
 
         <p class="mt-4 text-base font-medium leading-8 text-lightText">
-          اگر سوالی درباره محصولات، سفارش‌ها یا انتخاب قهوه مناسب دارید،
-          خوشحال می‌شویم با ما در ارتباط باشید.
+          {{ settings.contact_hero_description }}
         </p>
       </div>
-
     </section>
 
     <section class="py-20">
       <div class="container mx-auto px-4">
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-12">
           <!-- info cards -->
-          <div class="lg:col-span-5 ">
+          <div class="lg:col-span-5">
             <div class="rounded-3xl bg-bg p-6 shadow-lg card-des">
               <h2 class="text-2xl font-bold text-text">
-                اطلاعات تماس
+                {{ settings.contact_info_title }}
               </h2>
 
               <p class="mt-3 text-sm leading-8 text-text">
-                برای ثبت سفارش، پیگیری خرید یا دریافت مشاوره انتخاب قهوه،
-                از راه‌های زیر با ما در ارتباط باشید.
+                {{ settings.contact_info_description }}
               </p>
 
               <div class="mt-8 space-y-5">
@@ -67,13 +78,10 @@ const submitForm = () => {
                   <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-background text-text">
                     <RiMapPinLine class="size-6" />
                   </div>
-
                   <div>
-                    <h3 class="font-bold text-text">
-                      آدرس فروشگاه
-                    </h3>
+                    <h3 class="font-bold text-text">آدرس فروشگاه</h3>
                     <p class="mt-1 text-sm leading-7 text-lightText">
-                      تهران، خیابان ولیعصر، نبش کوچه قهوه، پلاک ۱۲
+                      {{ settings.store_address }}
                     </p>
                   </div>
                 </div>
@@ -82,13 +90,10 @@ const submitForm = () => {
                   <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-background text-text">
                     <RiPhoneLine class="size-6" />
                   </div>
-
                   <div>
-                    <h3 class="font-bold text-text">
-                      تلفن تماس
-                    </h3>
+                    <h3 class="font-bold text-text">تلفن تماس</h3>
                     <p class="mt-1 text-sm text-lightText">
-                      ۰۲۱-۱۲۳۴۵۶۷۸
+                      {{ toPersianDigits(settings.store_phone) }}
                     </p>
                   </div>
                 </div>
@@ -97,13 +102,10 @@ const submitForm = () => {
                   <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-background text-text">
                     <RiMailLine class="size-6" />
                   </div>
-
                   <div>
-                    <h3 class="font-bold text-text">
-                      ایمیل
-                    </h3>
+                    <h3 class="font-bold text-text">ایمیل</h3>
                     <p class="mt-1 text-sm text-lightText">
-                      info@coffee-store.ir
+                      {{ settings.store_email }}
                     </p>
                   </div>
                 </div>
@@ -112,21 +114,18 @@ const submitForm = () => {
                   <div class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-background text-text">
                     <RiTimeLine class="size-6" />
                   </div>
-
                   <div>
-                    <h3 class="font-bold text-text">
-                      ساعت کاری
-                    </h3>
+                    <h3 class="font-bold text-text">ساعت کاری</h3>
                     <p class="mt-1 text-sm leading-7 text-lightText">
-                      شنبه تا پنجشنبه از ساعت ۹ صبح تا ۹ شب
+                      {{ settings.store_working_hours }}
                     </p>
                   </div>
                 </div>
               </div>
 
-              <div class="mt-8 border-t border-border pt-6 ">
+              <div class="mt-8 border-t border-border pt-6">
                 <a
-                    href="https://instagram.com"
+                    :href="`https://instagram.com/${settings.store_instagram}`"
                     target="_blank"
                     class="inline-flex items-center gap-2 rounded-full bg-text px-5 py-3 text-sm text-white transition-all duration-300 hover:-translate-y-1 hover:bg-background hover:text-text hover:shadow-lg"
                 >
@@ -141,11 +140,11 @@ const submitForm = () => {
           <div class="lg:col-span-7">
             <div class="rounded-3xl bg-bg p-6 shadow-lg card-des">
               <h2 class="text-2xl font-bold text-text">
-                ارسال پیام
+                {{ settings.contact_form_title }}
               </h2>
 
               <p class="mt-3 text-sm leading-8 text-text">
-              پیامتون رو از این قسمت برای ما ارسال کنید.
+                {{ settings.contact_form_description }}
               </p>
 
               <form class="mt-6 space-y-5" @submit.prevent="submitForm">
@@ -154,7 +153,6 @@ const submitForm = () => {
                     <label class="mb-2 block text-sm font-medium text-text">
                       نام شما
                     </label>
-
                     <input
                         v-model="form.name"
                         type="text"
@@ -167,7 +165,6 @@ const submitForm = () => {
                     <label class="mb-2 block text-sm font-medium text-text">
                       ایمیل
                     </label>
-
                     <input
                         v-model="form.email"
                         type="email"
@@ -181,7 +178,6 @@ const submitForm = () => {
                   <label class="mb-2 block text-sm font-medium text-text">
                     پیام شما
                   </label>
-
                   <textarea
                       v-model="form.message"
                       rows="6"
@@ -204,13 +200,13 @@ const submitForm = () => {
 
         <!-- map placeholder -->
         <div class="mt-10 overflow-hidden rounded-3xl bg-stone-200 shadow-lg dark:bg-stone-800">
-          <div class="flex h-72 items-center justify-center bg-[url('/images/footer.webp')] bg-cover bg-center">
+          <div class="flex h-72 items-center justify-center bg-cover bg-center" :style="{ backgroundImage: `url(${settings.contact_map_background})` }">
             <div class="rounded-2xl bg-black/60 px-6 py-4 text-center text-white backdrop-blur">
               <p class="font-bold">
-                موقعیت فروشگاه روی نقشه
+                {{ settings.contact_map_title }}
               </p>
               <p class="mt-2 text-sm text-stone-200">
-                بعداً می‌تونی این قسمت رو با Google Map یا Leaflet جایگزین کنی.
+                {{ settings.contact_map_description }}
               </p>
             </div>
           </div>

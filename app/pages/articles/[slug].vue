@@ -3,27 +3,41 @@ import type {Article} from "#shared/article";
 
 const route = useRoute()
 const slug = route.params.slug as string
+const { apiFetch } = useApi()
+const { settings, fetchSettings } = useSettings()
+
+await fetchSettings()
 
 const { data, pending, error } = useAsyncData(
     `article-${slug}`,
-    () => $fetch(`/api/articles/${slug}`),
+    () => apiFetch<Article>(`/articles/${slug}`),
 )
 
-const article= computed(() => (data.value as { data: Article } | null)?.data ?? null)
+const article = computed(() => data.value ?? null)
+
+const siteUrl = computed(() => settings.value.site_url || 'https://coffee-store.example.com')
 
 useSeoMeta({
-  title: () => article.value
-      ? `${article.value.title} | قهوه‌فروشی`
-      : "مقاله | قهوه‌فروشی",
+  title: () => article.value?.meta_title || (article.value
+      ? `${article.value.title} | ${settings.value.default_meta_title}`
+      : `مقاله | ${settings.value.default_meta_title}`),
 
-  description: () => article.value?.description ?? "مشاهده جزئیات مقالات",
+  description: () => article.value?.meta_description || article.value?.description || settings.value.default_meta_description,
 
-  ogTitle: () => article.value?.title ?? "مقاله | قهوه‌فروشی",
+  ogTitle: () => article.value?.og_title || article.value?.title || '',
 
-  ogDescription: () => article.value?.description ?? "مشاهده جزئیات مقالات",
+  ogDescription: () => article.value?.og_description || article.value?.description || '',
 
-  ogImage: () => article.value?.image ?? "",
+  ogImage: () => article.value?.og_image || article.value?.image || settings.value.default_og_image,
 })
+
+useHead({
+  link: [
+    { rel: 'canonical', href: `${siteUrl.value}/articles/${slug}` },
+  ],
+})
+
+
 </script>
 
 <template>
@@ -43,8 +57,8 @@ useSeoMeta({
       <article v-else-if="article" class="mt-8 grid grid-cols-1 md:grid-cols-1 gap-8">
         <div>
           <img
-              :src="article.image"
-              :alt="article.imageAlt"
+              :src="article.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=400&fit=crop'"
+              :alt="article.image_alt || article.imageAlt"
               class="w-full rounded-lg shadow-md"
           />
         </div>

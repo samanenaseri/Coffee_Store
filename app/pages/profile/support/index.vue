@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type {
   SupportTicketPriority,
-  SupportTicketStatus,
 } from '#shared/support'
 
 definePageMeta({
   layout: 'profile',
+  middleware: ['auth'],
 })
 
 useSeoMeta({
@@ -68,31 +68,34 @@ const priorityOptions: Array<{
   },
 ]
 
-const statusMap: Record<
-    SupportTicketStatus,
-    {
-      label: string
-      className: string
-    }
-> = {
+const statusMap: Record<string, { label: string; className: string }> = {
   open: {
     label: 'باز',
     className:
         'bg-blue-50 text-blue-700 dark:bg-blue-950/30 dark:text-blue-300',
   },
-
   in_progress: {
     label: 'در حال بررسی',
     className:
         'bg-orange-50 text-orange-700 dark:bg-orange-950/30 dark:text-orange-300',
   },
-
+  // legacy alias from older admin replies
+  waiting: {
+    label: 'در حال بررسی',
+    className:
+        'bg-orange-50 text-orange-700 dark:bg-orange-950/30 dark:text-orange-300',
+  },
   answered: {
     label: 'پاسخ داده‌شده',
     className:
         'bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300',
   },
-
+  // legacy alias — admin used to set status=replied
+  replied: {
+    label: 'پاسخ داده‌شده',
+    className:
+        'bg-green-50 text-green-700 dark:bg-green-950/30 dark:text-green-300',
+  },
   closed: {
     label: 'بسته‌شده',
     className:
@@ -100,20 +103,35 @@ const statusMap: Record<
   },
 }
 
-const priorityLabel: Record<SupportTicketPriority, string> = {
+const priorityLabel: Record<string, string> = {
   low: 'کم',
   normal: 'معمولی',
   high: 'زیاد',
 }
 
-const formatDate = (date: string) => {
-  return new Intl.DateTimeFormat('fa-IR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(date))
+const ticketStatus = (status: string | undefined) => {
+  return statusMap[status || ''] || statusMap.open
+}
+
+const ticketPriority = (priority: string | undefined) => {
+  return priorityLabel[priority || ''] || priorityLabel.normal
+}
+
+const formatDate = (date: string | undefined | null) => {
+  if (!date) return '—'
+  const d = new Date(date)
+  if (!Number.isFinite(d.getTime())) return '—'
+  try {
+    return new Intl.DateTimeFormat('fa-IR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(d)
+  } catch {
+    return '—'
+  }
 }
 
 const resetForm = () => {
@@ -362,13 +380,13 @@ await fetchTickets()
 
                 <span
                     class="rounded-full px-3 py-1 text-xs font-medium"
-                    :class="statusMap[ticket.status].className"
+                    :class="ticketStatus(ticket.status).className"
                 >
-                  {{ statusMap[ticket.status].label }}
+                  {{ ticketStatus(ticket.status).label }}
                 </span>
               </div>
 
-              <p class="mt-3 line-clamp-2 text-sm leading-7 text-lightText">
+              <p class="mt-3 text-sm leading-7 text-lightText">
                 {{ ticket.message }}
               </p>
             </div>
@@ -376,7 +394,7 @@ await fetchTickets()
             <div class="shrink-0 text-sm text-lightText">
               <p>
                 اولویت:
-                {{ priorityLabel[ticket.priority] }}
+                {{ ticketPriority(ticket.priority) }}
               </p>
 
               <p class="mt-2">
@@ -395,6 +413,41 @@ await fetchTickets()
             >
               سفارش مرتبط: #{{ ticket.orderId }}
             </NuxtLink>
+          </div>
+
+          <!-- پاسخ‌های پشتیبانی -->
+          <div
+              v-if="ticket.replies?.length"
+              class="mt-4 space-y-3 border-t border-gray-100 pt-4 dark:border-gray-800"
+          >
+            <p class="text-xs font-semibold text-lightText">
+              گفتگو
+            </p>
+
+            <div
+                v-for="reply in ticket.replies"
+                :key="reply.id"
+                class="rounded-xl px-4 py-3 text-sm leading-7"
+                :class="
+                  reply.isAdminReply || reply.sender === 'admin'
+                    ? 'bg-amber-50 text-amber-950 dark:bg-amber-950/30 dark:text-amber-100'
+                    : 'bg-gray-50 text-text dark:bg-gray-900/40'
+                "
+            >
+              <div class="mb-1 flex flex-wrap items-center justify-between gap-2 text-xs opacity-80">
+                <span class="font-medium">
+                  {{
+                    reply.isAdminReply || reply.sender === 'admin'
+                      ? 'پاسخ پشتیبانی'
+                      : 'شما'
+                  }}
+                </span>
+                <span>{{ formatDate(reply.createdAt) }}</span>
+              </div>
+              <p class="whitespace-pre-wrap">
+                {{ reply.message }}
+              </p>
+            </div>
           </div>
         </article>
       </div>

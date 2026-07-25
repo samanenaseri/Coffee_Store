@@ -39,13 +39,17 @@ const notificationIcon = {
           </div>
 
           <div class="min-w-0 flex-1">
-            <h3 class="text-sm font-bold">
+            <h3
+                v-if="notification.title"
+                class="text-sm font-bold leading-6"
+            >
               {{ notification.title }}
             </h3>
 
             <p
                 v-if="notification.message"
-                class="mt-1 text-xs leading-6 opacity-90"
+                class="text-xs leading-6 opacity-90"
+                :class="notification.title ? 'mt-1' : 'text-sm font-medium opacity-100'"
             >
               {{ notification.message }}
             </p>

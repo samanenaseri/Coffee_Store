@@ -3,11 +3,11 @@
     <div class="container mx-auto px-4">
       <div class="mb-10 text-center">
         <h2 class="text-3xl font-bold text-text">
-          منوی کافه
+          {{ heading }}
         </h2>
 
         <p class="mt-3 text-sm text-text">
-          دسته‌بندی موردنظر را انتخاب کنید
+          {{ subtitle }}
         </p>
       </div>
 
@@ -68,8 +68,14 @@
               </div>
 
               <span class="w-fit rounded-full bg-amber-100 px-4 py-4 text-sm bg-items items-center text-center ">
+                 <img
+                     v-if="isImageUrl(activeCategory?.icon)"
+                     :src="resolveUrl(activeCategory.icon)"
+                     :alt="activeCategory.title"
+                     class="h-16 w-16 object-contain"
+                 />
                  <component
-                     v-if="activeCategory?.icon"
+                     v-else-if="activeCategory?.icon && categoryIcons[activeCategory.icon as keyof typeof categoryIcons]"
                      :is="categoryIcons[activeCategory.icon as keyof typeof categoryIcons]"
                      class="h-16 w-16 text-amber-700 dark:text-amber-600"
                  />
@@ -138,6 +144,11 @@ import CoffeeIcon from '~/assets/icons/menu-category/coffee.svg'
 import HotDrinkIcon from '~/assets/icons/menu-category/hot-drink.svg'
 import ColdDrinkIcon from '~/assets/icons/menu-category/cold-drink.svg'
 
+const props = defineProps({
+  heading: { type: String, default: 'منوی کافه' },
+  subtitle: { type: String, default: 'دسته‌بندی موردنظر را انتخاب کنید' },
+})
+
 const {
   menuCategories,
   activeCategorySlug,
@@ -154,6 +165,13 @@ const categoryIcons = {
   coffee: CoffeeIcon,
   hotDrink: HotDrinkIcon,
   coldDrink: ColdDrinkIcon,
+}
+
+const { resolveUrl } = useImageUrl()
+
+function isImageUrl(value?: string | null): boolean {
+  if (!value) return false
+  return value.startsWith('/') || value.startsWith('http') || value.includes('.')
 }
 </script>
 <style scoped>

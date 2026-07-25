@@ -1,2 +1,8 @@
 User-Agent: *
-Disallow:
+Disallow: /profile
+Disallow: /cart
+Disallow: /checkout
+Disallow: /login
+Disallow: /register
+
+Sitemap: https://coffee-store.example.com/sitemap.xml

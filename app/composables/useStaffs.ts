@@ -1,12 +1,14 @@
 import type { Staff } from "#shared/staff"
 
 export const useStaffs = () => {
+    const { apiFetch } = useApi()
+
     const { data, pending, error } = useAsyncData(
         "staffs",
-        () => $fetch<{ success: boolean; data: Staff[] }>("/api/staffs")
+        () => apiFetch<Staff[]>('/staff'),
     )
 
-    const staffs = computed(() => data.value?.data ?? [])
+    const staffs = computed(() => data.value ?? [])
 
     return {
         staffs,

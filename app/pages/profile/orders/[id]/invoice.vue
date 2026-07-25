@@ -3,9 +3,11 @@ import type {
   PaymentMethod,
   PaymentStatus,
 } from '#shared/order'
+import { formatOrderDate } from '~/utils/orderNormalize'
 
 definePageMeta({
   layout: 'profile',
+  middleware: ['auth'],
 })
 
 const route = useRoute()
@@ -43,6 +45,7 @@ const paymentMethodLabel: Record<PaymentMethod, string> = {
   online: 'پرداخت آنلاین',
   wallet: 'کیف پول',
   cash_on_delivery: 'پرداخت در محل',
+  card_to_card: 'کارت به کارت',
 }
 
 const paymentStatusLabel: Record<PaymentStatus, string> = {
@@ -52,15 +55,8 @@ const paymentStatusLabel: Record<PaymentStatus, string> = {
   refunded: 'بازپرداخت‌شده',
 }
 
-const formatDate = (date: string) => {
-  return new Intl.DateTimeFormat('fa-IR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(date))
-}
+const formatDate = (date: string | undefined | null) =>
+  formatOrderDate(date, { hour: '2-digit', minute: '2-digit' })
 
 const printInvoice = () => {
   if (!import.meta.client) {
@@ -143,7 +139,7 @@ const printInvoice = () => {
             <span class="text-gray-500">تاریخ ثبت:</span>
 
             <span class="mr-2">
-              {{ formatDate(order.date) }}
+              {{ formatDate(order.date || order.createdAt) }}
             </span>
           </p>
         </div>

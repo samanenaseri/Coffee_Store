@@ -115,14 +115,21 @@ const iconGlow = {
   canceled: 'drop-shadow(0 0 6px #ef4444)',
 }
 
-// 🟣 relative time
-const timeAgo = (date: string) => {
-  const diff = Date.now() - new Date(date).getTime()
+// 🟣 relative time — safe for missing/invalid dates
+const timeAgo = (date: string | undefined | null) => {
+  if (date == null || date === '') return '—'
+
+  const ts = new Date(date).getTime()
+  if (!Number.isFinite(ts)) return '—'
+
+  const diff = Date.now() - ts
+  if (diff < 0) return 'همین الان'
 
   const mins = Math.floor(diff / 60000)
   const hours = Math.floor(mins / 60)
   const days = Math.floor(hours / 24)
 
+  if (mins < 1) return 'همین الان'
   if (mins < 60) return `${mins} دقیقه پیش`
   if (hours < 24) return `${hours} ساعت پیش`
   return `${days} روز پیش`

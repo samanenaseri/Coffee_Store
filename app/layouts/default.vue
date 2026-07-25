@@ -1,4 +1,7 @@
 <script setup lang="ts">
+const { settings, fetchSettings } = useSettings()
+await fetchSettings()
+
 useSeoMeta({
   ogImage: "/og-image.jpg",
   twitterImage: "/og-image.jpg",
@@ -8,11 +11,11 @@ useHead({
   script: [
     {
       type: "application/ld+json",
-      innerHTML: JSON.stringify({
+      innerHTML: () => JSON.stringify({
         "@context": "https://schema.org",
         "@type": "Store",
         name: "قهوه‌فروشی | Coffee Store",
-        url: "https://coffee-store.example.com",
+        url: settings.value.site_url || 'https://coffee-store.example.com',
         description: "فروشگاه تخصصی قهوه با انواع قهوه‌های اسپرسو، لاته، کاپوچینو",
         telephone: "+98-21-12345678",
         address: {

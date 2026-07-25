@@ -1,7 +1,16 @@
 <script setup lang="ts">
+const { settings, fetchSettings } = useSettings()
+await fetchSettings()
+
 useSeoMeta({
   title: "دسته‌بندی محصولات | قهوه‌فروشی",
   description: "مشاهده محصولات بر اساس دسته‌بندی",
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/categories` },
+  ],
 })
 </script>
 

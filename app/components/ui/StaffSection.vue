@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { RiInstagramLine } from "@remixicon/vue"
 
+const props = defineProps<{
+  heading?: string
+  subheading?: string
+}>()
+
 const { staffs, pending, error } = useStaffs()
 </script>
 
@@ -9,11 +14,11 @@ const { staffs, pending, error } = useStaffs()
     <div class="container mx-auto px-4">
       <div class="mb-12 text-center">
         <h2 class="text-3xl font-bold text-text">
-          تیم ما
+          {{ props.heading || 'تیم ما' }}
         </h2>
 
         <p class="mt-3 text-sm text-lightText">
-          با اعضای حرفه‌ای قهوه‌فروشی ما آشنا شوید
+          {{ props.subheading || 'با اعضای حرفه‌ای قهوه‌فروشی ما آشنا شوید' }}
         </p>
       </div>
 
@@ -46,7 +51,7 @@ const { staffs, pending, error } = useStaffs()
         >
           <div class="relative overflow-hidden">
             <img
-                :src="staff.image"
+                :src="staff.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'"
                 :alt="staff.name"
                 class="h-72 w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />

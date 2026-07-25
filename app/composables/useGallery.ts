@@ -1,9 +1,19 @@
-import type {gallery} from "#shared/gallery";
+import type { gallery } from "#shared/gallery"
+
+interface GalleryPaginatedResponse {
+    current_page: number
+    data: gallery[]
+    last_page: number
+    total: number
+    per_page: number
+}
 
 export const useGallery = () => {
+    const { apiFetch } = useApi()
+
     const { data, pending, error } = useAsyncData(
         "gallery",
-        () => $fetch<{ success: boolean; data: gallery[] }>("/api/gallery"),
+        () => apiFetch<GalleryPaginatedResponse>('/gallery'),
     )
 
     const gallery = computed(() => data.value?.data ?? [])

@@ -1,23 +1,103 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import type { Product } from '#shared/product'
+import { formatWeightLabel, getProductWeightPackages } from '#shared/product'
+import {
+  RiHeartFill,
+  RiHeartLine,
+  RiLoader4Line,
+} from '@remixicon/vue'
+
 import cartCup from '~/assets/icons/cart-cup.svg'
-defineProps<{
-  product: any
+
+const props = defineProps<{
+  product: Product
 }>()
+
 const cartStore = useCartStore()
+const favoriteStore = useFavoriteStore()
+const notification = useNotification()
 
 const isFilling = ref(false)
 
-const addToCartWithAnimation = (product: any) => {
-  if (isFilling.value) return
+const isProductFavorite = computed(() => {
+  return favoriteStore.isFavorite(props.product.id)
+})
+
+const favoritePending = computed(() => {
+  return favoriteStore.isActionPending(props.product.id)
+})
+
+const packages = computed(() => getProductWeightPackages(props.product))
+
+const displayTomanPrice = computed(() => {
+  if (packages.value.length > 0) {
+    const minRial = Math.min(...packages.value.map(p => p.price))
+    return Math.round(minRial / 10)
+  }
+  return Math.round(props.product.price / 10)
+})
+
+const pricePrefix = computed(() => (packages.value.length > 1 ? 'از ' : ''))
+
+const weightHint = computed(() => {
+  if (packages.value.length > 0) {
+    if (packages.value.length === 1) {
+      return formatWeightLabel(packages.value[0].weight, packages.value[0].unit)
+    }
+    return `${packages.value.length} بسته وزنی`
+  }
+  if (props.product.weight) {
+    return formatWeightLabel(
+      props.product.weight,
+      props.product.weight_unit || props.product.weightUnit,
+    )
+  }
+  return null
+})
+
+const addToCartWithAnimation = (product: Product) => {
+  if (isFilling.value) {
+    return
+  }
+
+  // Multiple packages: go to detail page to pick weight
+  if (packages.value.length > 1) {
+    navigateTo(`/products/${product.slug}`)
+    return
+  }
 
   isFilling.value = true
-  cartStore.addToCart(product)
+  const pkg = packages.value[0] ?? null
+  cartStore.addToCart(product, pkg)
 
-  // بعد از اتمام انیمیشن، وضعیت پر شدن را ریست کن
   setTimeout(() => {
     isFilling.value = false
   }, 900)
+}
+
+const toggleFavorite = async () => {
+  if (favoritePending.value) {
+    return
+  }
+
+  const result = await favoriteStore.toggleFavorite(props.product)
+
+  if (!result.success) {
+    notification.error(
+        'عملیات ناموفق بود',
+        'تغییر وضعیت علاقه‌مندی انجام نشد.',
+    )
+
+    return
+  }
+
+  notification.success(
+      result.isFavorite
+          ? 'به علاقه‌مندی‌ها اضافه شد'
+          : 'از علاقه‌مندی‌ها حذف شد',
+      props.product.title,
+  )
 }
 </script>
 
@@ -26,8 +106,38 @@ const addToCartWithAnimation = (product: any) => {
       class="group relative overflow-hidden rounded-2xl bg-bg shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl card-des"
   >
     <div class="relative overflow-hidden">
+      <button
+          type="button"
+          class="absolute left-3 top-3 z-20 flex size-10 items-center justify-center rounded-full bg-white/90 shadow-md backdrop-blur-sm transition-all duration-300 hover:scale-110 disabled:cursor-not-allowed disabled:opacity-60"
+          :class="{
+    'text-red-500': isProductFavorite,
+    'text-gray-600': !isProductFavorite,
+  }"
+          :disabled="favoritePending"
+          :aria-label="
+    isProductFavorite
+      ? 'حذف از علاقه‌مندی‌ها'
+      : 'افزودن به علاقه‌مندی‌ها'
+  "
+          @click.stop="toggleFavorite"
+      >
+        <RiLoader4Line
+            v-if="favoritePending"
+            class="size-6 animate-spin"
+        />
+
+        <RiHeartFill
+            v-else-if="isProductFavorite"
+            class="size-6 scale-110 text-red-500 transition-transform duration-300"
+        />
+
+        <RiHeartLine
+            v-else
+            class="size-6 text-gray-600 transition-transform duration-300"
+        />
+      </button>
       <img
-          :src="product.image"
+          :src="product.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop'"
           :alt="product.title"
           class="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
@@ -90,19 +200,20 @@ const addToCartWithAnimation = (product: any) => {
         {{ product.description }}
       </p>
 
+      <p v-if="weightHint" class="mt-1 text-xs text-lightText">
+        {{ weightHint }}
+      </p>
+
       <div class="mt-4 flex items-center justify-between">
         <span class="font-bold text-divider">
-          {{ product.price }} تومان
+          {{ pricePrefix }}{{ displayTomanPrice.toLocaleString('fa-IR') }} تومان
         </span>
 
-        <NuxtLink :to="`/products/${product.slug}`">
-          <base-button
-              variant="primary"
-              class-name="opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
-              size="sm"
-          >
-            مشاهده
-          </base-button>
+        <NuxtLink
+          :to="`/products/${product.slug}`"
+          class="inline-flex items-center justify-center gap-2 font-medium rounded-lg transition-all duration-300 main-button txt-btn shadow-theme-xs hover:bg-brand-600 px-4 py-2 text-sm opacity-0 group-hover:translate-y-0 group-hover:opacity-100"
+        >
+          مشاهده
         </NuxtLink>
       </div>
     </div>

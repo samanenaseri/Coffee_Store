@@ -9,7 +9,7 @@ defineProps<{
   >
     <div class="relative overflow-hidden">
       <img
-          :src="article.image"
+          :src="article.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=400&fit=crop'"
           :alt="article.title"
           class="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />

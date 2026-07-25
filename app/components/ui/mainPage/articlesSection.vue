@@ -3,10 +3,10 @@
     <div class="container mx-auto px-4">
       <div class="mb-12 text-center">
         <h2 class="text-3xl font-bold text-text ">
-          مقالات
+          {{ heading }}
         </h2>
         <p class="mt-3 text-sm text-lightText ">
-          جدیدترین مقالات و نکات درباره قهوه
+          {{ subtitle }}
         </p>
       </div>
 
@@ -53,5 +53,11 @@
 </template>
 
 <script setup lang="ts">
+const props = defineProps({
+  heading: { type: String, default: 'مقالات' },
+  subtitle: { type: String, default: 'جدیدترین مقالات و نکات درباره قهوه' },
+  limit: { type: Number, default: 5 },
+})
+
 const { articles, pending, error } = useArticles()
 </script>

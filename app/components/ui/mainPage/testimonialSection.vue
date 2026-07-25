@@ -5,6 +5,12 @@ import {
   RiDoubleQuotesR
 } from '@remixicon/vue'
 
+const props = defineProps({
+  heading: { type: String, default: 'نظر مشتریان ما' },
+  subtitle: { type: String, default: 'تجربه مشتریان از خرید قهوه و محصولات ما' },
+  backgroundImage: { type: String, default: '/images/testimonal-bg.jpg' },
+})
+
 const { testimonials, pending, error } = useTestimonials()
 
 const activeIndex = ref(0)
@@ -71,7 +77,8 @@ onBeforeUnmount(() => {
   >
     <!-- background image -->
     <div
-        class="absolute inset-0 bg-[url('/images/testimonal-bg.jpg')] bg-cover bg-center"
+        class="absolute inset-0 bg-cover bg-center"
+        :style="{ backgroundImage: `url('${backgroundImage}')` }"
     ></div>
 
     <!-- dark overlay روی عکس، نه روی متن -->
@@ -81,11 +88,11 @@ onBeforeUnmount(() => {
     <div class="relative z-10 container mx-auto px-4">
       <div class=" text-center">
         <h2 class="text-4xl font-bold text-lightText">
-          نظر مشتریان ما
+          {{ heading }}
         </h2>
 
         <p class="mt-3 text-lg text-lightText">
-          تجربه مشتریان از خرید قهوه و محصولات ما
+          {{ subtitle }}
         </p>
       </div>
 

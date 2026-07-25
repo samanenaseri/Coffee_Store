@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-1" :class="wrapperClass">
-    <label v-if="label" :for="id" class="text-sm font-semibold txt-label">
+    <label v-if="label" :for="id" class="text-sm font-semibold text-text">
       {{ label }}
     </label>
 

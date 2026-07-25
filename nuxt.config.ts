@@ -1,4 +1,5 @@
 import svgLoader from 'vite-svg-loader'
+import { resolve } from 'path'
 export default defineNuxtConfig({
 
   modules: ["@nuxtjs/tailwindcss",
@@ -15,9 +16,20 @@ export default defineNuxtConfig({
   vite: {
     plugins: [
       svgLoader()
-    ]
+    ],
+    resolve: {
+      alias: {
+        '#shared': resolve(__dirname, 'shared'),
+      },
+    },
   },
   css: ['~/assets/styles/main.scss'],
+
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:8000/api/v1',
+    },
+  },
 
   app: {
     head: {
@@ -38,6 +50,8 @@ export default defineNuxtConfig({
         { name: "twitter:card", content: "summary_large_image" },
         { name: "twitter:title", content: "قهوه‌فروشی | Coffee Store" },
         { name: "twitter:description", content: "فروشگاه تخصصی قهوه با بهترین کیفیت" },
+        { property: "og:image", content: "/og-image.jpg" },
+        { name: "twitter:image", content: "/og-image.jpg" },
       ],
 
       link: [

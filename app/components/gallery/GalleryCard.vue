@@ -1,14 +1,24 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   gallery: any
 }>()
+
+const { resolveUrl } = useImageUrl()
+
+const imageSrc = computed(() => {
+  const raw = props.gallery?.image
+  if (!raw) {
+    return 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop'
+  }
+  return resolveUrl(raw) || raw
+})
 </script>
 <template>
   <article class="bg-bg rounded-lg  overflow-hidden sm:rounded-md p-5 card-des">
     <div class="rounded-lg">
       <img
-          :src="gallery.image"
-          :alt="gallery.imageAlt"
+          :src="imageSrc"
+          :alt="gallery.image_alt || gallery.imageAlt || gallery.title"
           class="rounded-md w-full h-48 object-cover"
           loading="lazy"
       />

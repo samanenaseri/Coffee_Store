@@ -1,6 +1,7 @@
 <script setup lang="ts">
 useSeoMeta({
   title: "سبد خرید | قهوه‌فروشی",
+  description: "مشاهده و مدیریت اقلام سبد خرید شما",
   robots: "noindex, nofollow",
 })
 import { useCartStore } from "~/stores/cart"
@@ -22,7 +23,7 @@ const cartStore = useCartStore()
       <div class="lg:col-span-8 space-y-4 ">
         <CartItem
             v-for="item in cartStore.items"
-            :key="item.product.id"
+            :key="`${item.product.id}:${item.weightPackageId ?? 'default'}`"
             :item="item"
         />
       </div>
@@ -38,7 +39,7 @@ const cartStore = useCartStore()
 
         <div class="flex justify-between mb-2">
           <span class="text-lightText text-base font-bold">جمع کل:</span>
-          <span class="text-lightText text-base font-medium">{{ cartStore.formatPrice(cartStore.totalPrice) }} تومان</span>
+          <span class="text-lightText text-base font-medium">{{ cartStore.formatPrice(Math.round(cartStore.totalPrice / 10)) }} تومان</span>
         </div>
         <NuxtLink
             to="/checkout"

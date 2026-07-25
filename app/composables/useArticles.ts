@@ -1,9 +1,19 @@
-import type { Article } from "#shared/article"
+import type { Article } from "#shared/Article"
+
+interface ArticlesPaginatedResponse {
+    current_page: number
+    data: Article[]
+    last_page: number
+    total: number
+    per_page: number
+}
 
 export const useArticles = () => {
+    const { apiFetch } = useApi()
+
     const { data, pending, error } = useAsyncData(
         "articles",
-        () => $fetch<{ success: boolean; data: Article[] }>("/api/articles")
+        () => apiFetch<ArticlesPaginatedResponse>('/articles'),
     )
 
     const articles = computed(() => data.value?.data ?? [])

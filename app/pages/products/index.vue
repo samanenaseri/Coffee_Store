@@ -1,6 +1,22 @@
 <script setup lang="ts">
 import ProductCard from "~/components/products/ProductCard.vue";
 
+const { settings, fetchSettings } = useSettings()
+await fetchSettings()
+
+useSeoMeta({
+  title: "محصولات | قهوه‌فروشی",
+  description: "مشاهده و خرید انواع قهوه‌های تخصصی، دانه قهوه، اسپرسو، لاته و کاپوچینو از فروشگاه قهوه‌فروشی",
+  ogTitle: "محصولات | قهوه‌فروشی",
+  ogDescription: "مجموعه کامل محصولات قهوه با بهترین کیفیت و قیمت مناسب",
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/products` },
+  ],
+})
+
 const { products, pending, error } = useProducts()
 </script>
 

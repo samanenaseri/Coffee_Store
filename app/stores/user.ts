@@ -1,101 +1,71 @@
 import { defineStore } from "pinia"
-import type { Address } from "#shared/address"
-import { mockAddresses } from "#server/mock/addresses"
 
 interface UserProfile {
     isGuest: boolean
     name: string
     phone: string
     email: string
-    birthDate: string
 }
 
 export const useUserStore = defineStore("user", () => {
+    const { apiFetch } = useApi()
+
     const user = ref<UserProfile>({
         isGuest: true,
         name: "",
         phone: "",
         email: "",
-        birthDate: "",
     })
 
-    const addresses = ref<Address[]>([...mockAddresses])
-
-    const selectedAddressId = ref<number | null>(
-        addresses.value.find(address => address.isDefault)?.id ?? null,
-    )
-
-    const selectedAddress = computed(() => {
-        return addresses.value.find(
-            address => address.id === selectedAddressId.value,
-        )
-    })
+    const loading = ref(false)
 
     const setUser = (data: Partial<UserProfile>) => {
         user.value = {
             ...user.value,
             ...data,
         }
-
-        saveUser()
     }
 
-    const addAddress = (address: Omit<Address, "id">) => {
-        addresses.value.push({
-            id: Date.now(),
-            ...address,
-        })
-
-        saveUser()
-    }
-
-    const selectAddress = (id: number) => {
-        selectedAddressId.value = id
-        saveUser()
-    }
-
-    const saveUser = () => {
-        if (!import.meta.client) return
-
-        localStorage.setItem(
-            "coffee-user",
-            JSON.stringify({
-                user: user.value,
-                addresses: addresses.value,
-                selectedAddressId: selectedAddressId.value,
-            }),
-        )
-    }
-
-    const loadUser = () => {
-        if (!import.meta.client) return
-
+    const fetchProfile = async () => {
+        loading.value = true
         try {
-            const savedData = localStorage.getItem("coffee-user")
-
-            if (!savedData) return
-
-            const parsedData = JSON.parse(savedData)
-
-            if (parsedData.user) {
+            const response = await apiFetch<{ user: Record<string, unknown> }>('/auth/profile')
+            if (response.user) {
                 user.value = {
-                    ...user.value,
-                    ...parsedData.user,
+                    isGuest: false,
+                    name: (response.user.name as string) || "",
+                    phone: (response.user.phone as string) || "",
+                    email: (response.user.email as string) || "",
                 }
             }
+        } catch (err: any) {
+            console.error('Fetch profile error:', err)
+        } finally {
+            loading.value = false
+        }
+    }
 
-            if (Array.isArray(parsedData.addresses)) {
-                addresses.value = parsedData.addresses
+    const updateProfile = async (data: { name?: string; email?: string }) => {
+        loading.value = true
+        try {
+            const response = await apiFetch<{ user: Record<string, unknown> }>('/auth/profile', {
+                method: 'PUT',
+                body: data,
+            })
+            if (response.user) {
+                user.value = {
+                    ...user.value,
+                    name: (response.user.name as string) || user.value.name,
+                    phone: (response.user.phone as string) || user.value.phone,
+                    email: (response.user.email as string) || user.value.email,
+                }
             }
-
-            if (
-                typeof parsedData.selectedAddressId === "number" ||
-                parsedData.selectedAddressId === null
-            ) {
-                selectedAddressId.value = parsedData.selectedAddressId
-            }
-        } catch {
-            localStorage.removeItem("coffee-user")
+            return response
+        } catch (err: any) {
+            console.error('Update profile error:', err)
+            throw err
+        } finally {
+            loading.value = false
         }
     }
 
@@ -105,26 +75,15 @@ export const useUserStore = defineStore("user", () => {
             name: "",
             phone: "",
             email: "",
-            birthDate: "",
-        }
-
-        selectedAddressId.value = null
-
-        if (import.meta.client) {
-            localStorage.removeItem("coffee-user")
         }
     }
 
     return {
         user,
-        addresses,
-        selectedAddressId,
-        selectedAddress,
+        loading,
         setUser,
-        addAddress,
-        selectAddress,
-        saveUser,
-        loadUser,
+        fetchProfile,
+        updateProfile,
         resetUser,
     }
 })

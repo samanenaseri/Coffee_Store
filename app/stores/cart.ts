@@ -1,6 +1,11 @@
 import { defineStore } from 'pinia'
-import type { Product } from '#shared/product'
+import type { Product, WeightPackage } from '#shared/product'
 import type { CartItem } from '#shared/cart'
+import {
+    buildCartProduct,
+    cartLineKey,
+    cartLineKeyFromParts,
+} from '#shared/cart'
 
 export const useCartStore = defineStore('cart', () => {
     const items = ref<CartItem[]>([])
@@ -18,43 +23,42 @@ export const useCartStore = defineStore('cart', () => {
         }, 0)
     })
 
-    const addToCart = (product: Product) => {
-        const existingItem = items.value.find(
-            item => item.product.id === product.id,
-        )
+    const findLine = (productId: number, weightPackageId?: string | null) => {
+        const key = cartLineKeyFromParts(productId, weightPackageId)
+        return items.value.find(item => cartLineKey(item) === key)
+    }
 
-        if (existingItem) {
-            existingItem.quantity += 1
-        }
-        else {
-            items.value.push({
-                product,
-                quantity: 1,
-            })
-        }
-
-        saveCart()
+    const addToCart = (
+        product: Product,
+        pkg?: WeightPackage | null,
+    ) => {
+        addToCartWithQuantity(product, 1, pkg)
     }
 
     const addToCartWithQuantity = (
         product: Product,
         quantity: number,
+        pkg?: WeightPackage | null,
     ) => {
         if (quantity <= 0) {
             return
         }
 
-        const existingItem = items.value.find(
-            item => item.product.id === product.id,
-        )
+        const weightPackageId = pkg?.id ?? null
+        const cartProduct = buildCartProduct(product, pkg)
+        const existingItem = findLine(product.id, weightPackageId)
 
         if (existingItem) {
             existingItem.quantity += quantity
+            existingItem.product = cartProduct
         }
         else {
             items.value.push({
-                product,
+                product: cartProduct,
                 quantity,
+                weightPackageId,
+                selectedWeight: pkg?.weight ?? product.weight ?? null,
+                selectedWeightUnit: pkg?.unit ?? product.weight_unit ?? product.weightUnit ?? null,
             })
         }
 
@@ -65,35 +69,22 @@ export const useCartStore = defineStore('cart', () => {
         products: Array<{
             product: Product
             quantity: number
+            weightPackage?: WeightPackage | null
         }>,
     ) => {
-        products.forEach(({ product, quantity }) => {
+        products.forEach(({ product, quantity, weightPackage }) => {
             if (quantity <= 0) {
                 return
             }
-
-            const existingItem = items.value.find(
-                item => item.product.id === product.id,
-            )
-
-            if (existingItem) {
-                existingItem.quantity += quantity
-            }
-            else {
-                items.value.push({
-                    product,
-                    quantity,
-                })
-            }
+            addToCartWithQuantity(product, quantity, weightPackage)
         })
-
-        saveCart()
     }
 
-    const increaseQuantity = (productId: number) => {
-        const item = items.value.find(
-            item => item.product.id === productId,
-        )
+    const increaseQuantity = (
+        productId: number,
+        weightPackageId?: string | null,
+    ) => {
+        const item = findLine(productId, weightPackageId)
 
         if (!item) {
             return
@@ -103,10 +94,11 @@ export const useCartStore = defineStore('cart', () => {
         saveCart()
     }
 
-    const decreaseQuantity = (productId: number) => {
-        const item = items.value.find(
-            item => item.product.id === productId,
-        )
+    const decreaseQuantity = (
+        productId: number,
+        weightPackageId?: string | null,
+    ) => {
+        const item = findLine(productId, weightPackageId)
 
         if (!item) {
             return
@@ -116,16 +108,20 @@ export const useCartStore = defineStore('cart', () => {
             item.quantity -= 1
         }
         else {
-            removeFromCart(productId)
+            removeFromCart(productId, weightPackageId)
             return
         }
 
         saveCart()
     }
 
-    const removeFromCart = (productId: number) => {
+    const removeFromCart = (
+        productId: number,
+        weightPackageId?: string | null,
+    ) => {
+        const key = cartLineKeyFromParts(productId, weightPackageId)
         items.value = items.value.filter(
-            item => item.product.id !== productId,
+            item => cartLineKey(item) !== key,
         )
 
         saveCart()
@@ -160,7 +156,16 @@ export const useCartStore = defineStore('cart', () => {
             const savedCart = localStorage.getItem('coffee-cart')
 
             if (savedCart) {
-                items.value = JSON.parse(savedCart)
+                const parsed = JSON.parse(savedCart) as CartItem[]
+                items.value = parsed.map(item => ({
+                    ...item,
+                    weightPackageId: item.weightPackageId ?? null,
+                    selectedWeight: item.selectedWeight ?? item.product?.weight ?? null,
+                    selectedWeightUnit: item.selectedWeightUnit
+                        ?? item.product?.weight_unit
+                        ?? item.product?.weightUnit
+                        ?? null,
+                }))
             }
         }
         catch {

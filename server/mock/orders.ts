@@ -30,6 +30,8 @@ export const mockOrders: Order[] = [
             method: 'online',
             status: 'pending',
         },
+        walletAmount: 0,
+        payableAmount: 900000,
 
 
 
@@ -90,7 +92,8 @@ export const mockOrders: Order[] = [
             method: 'online',
             status: 'pending',
         },
-
+        walletAmount: 0,
+        payableAmount: 450000,
         discountAmount: 0,
         taxAmount: 0,
         description: '',
@@ -156,8 +159,9 @@ export const mockOrders: Order[] = [
             transactionId: 'TRX-98273541',
             paidAt: '2026-06-16T09:05:00+03:30',
         },
-
-        discountAmount: 50000,
+        walletAmount: 0,
+        payableAmount: 0,
+        discountAmount: 350000,
         taxAmount: 0,
         description: 'اگه امکانش هست زودتر ارسال بشه.',
         items: [

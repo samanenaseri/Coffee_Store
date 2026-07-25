@@ -1,48 +1,62 @@
 import type { OrderWithProducts } from '#shared/order'
+import { normalizeOrder, normalizeOrdersList } from '~/utils/orderNormalize'
 
-interface OrdersResponse {
-    success: boolean
+interface OrdersPaginatedResponse {
+    current_page: number
     data: OrderWithProducts[]
-}
-
-interface OrderResponse {
-    success: boolean
-    data: OrderWithProducts
+    last_page: number
+    total: number
+    per_page: number
 }
 
 interface OrderActionResponse {
-    success: boolean
     message: string
+    order?: unknown
 }
 
 export const useOrders = () => {
-    /*
-     * لیست سفارش‌ها
-     */
+    const { apiFetch } = useApi()
+
     const {
         data,
         pending,
         error,
         refresh,
-    } = useAsyncData<OrdersResponse>(
+    } = useAsyncData<OrdersPaginatedResponse>(
         'profile-orders',
-        () => $fetch<OrdersResponse>('/api/profile/orders'),
+        async () => {
+            const res = await apiFetch<any>('/profile/orders')
+            const list = normalizeOrdersList(res)
+
+            // Preserve pagination meta when present
+            if (res && typeof res === 'object' && Array.isArray(res.data)) {
+                return {
+                    current_page: Number(res.currentPage ?? res.current_page ?? 1),
+                    data: list,
+                    last_page: Number(res.lastPage ?? res.last_page ?? 1),
+                    total: Number(res.total ?? list.length),
+                    per_page: Number(res.perPage ?? res.per_page ?? list.length),
+                }
+            }
+
+            return {
+                current_page: 1,
+                data: list,
+                last_page: 1,
+                total: list.length,
+                per_page: list.length,
+            }
+        },
     )
 
     const orders = computed<OrderWithProducts[]>(() => {
         return data.value?.data ?? []
     })
 
-    /*
-     * جزئیات یک سفارش
-     */
     const order = ref<OrderWithProducts | null>(null)
     const orderPending = ref(false)
     const orderError = ref<unknown>(null)
 
-    /*
-     * عملیات لغو و مرجوعی
-     */
     const actionPending = ref(false)
     const actionError = ref<unknown>(null)
     const actionMessage = ref('')
@@ -55,17 +69,24 @@ export const useOrders = () => {
         order.value = null
 
         try {
-            const response = await $fetch<OrderResponse>(
-                `/api/profile/orders/${id}`,
+            const response = await apiFetch<unknown>(
+                `/profile/orders/${id}`,
             )
 
-            order.value = response.data
+            const normalized = normalizeOrder(response)
 
-            return response.data
+            if (!normalized) {
+                throw createError({
+                    statusCode: 404,
+                    statusMessage: 'سفارش پیدا نشد',
+                })
+            }
+
+            order.value = normalized
+            return normalized
         }
         catch (err) {
             orderError.value = err
-
             return null
         }
         finally {
@@ -82,30 +103,29 @@ export const useOrders = () => {
         actionMessage.value = ''
 
         try {
-            const response = await $fetch<OrderActionResponse>(
-                `/api/profile/orders/${id}/cancel`,
+            const response = await apiFetch<OrderActionResponse>(
+                `/profile/orders/${id}/cancel`,
                 {
                     method: 'POST',
-                    body: {
-                        reason,
-                    },
+                    body: { reason },
                 },
             )
 
-            actionMessage.value = response.message
+            actionMessage.value = response.message || 'درخواست لغو ثبت شد.'
 
-            // جزئیات سفارش دوباره از API خوانده می‌شود
-            // تا timeline و actionStatus جدید نمایش داده شوند.
-            await getOrderById(id)
-
-            // لیست سفارش‌ها نیز به‌روزرسانی می‌شود.
+            // Prefer order from response; otherwise re-fetch
+            const fromBody = normalizeOrder(response)
+            if (fromBody) {
+                order.value = fromBody
+            } else {
+                await getOrderById(id)
+            }
             await refresh()
 
             return true
         }
         catch (err) {
             actionError.value = err
-
             return false
         }
         finally {
@@ -122,26 +142,28 @@ export const useOrders = () => {
         actionMessage.value = ''
 
         try {
-            const response = await $fetch<OrderActionResponse>(
-                `/api/profile/orders/${id}/return`,
+            const response = await apiFetch<OrderActionResponse>(
+                `/profile/orders/${id}/return`,
                 {
                     method: 'POST',
-                    body: {
-                        reason,
-                    },
+                    body: { reason },
                 },
             )
 
-            actionMessage.value = response.message
+            actionMessage.value = response.message || 'درخواست مرجوعی ثبت شد.'
 
-            await getOrderById(id)
+            const fromBody = normalizeOrder(response)
+            if (fromBody) {
+                order.value = fromBody
+            } else {
+                await getOrderById(id)
+            }
             await refresh()
 
             return true
         }
         catch (err) {
             actionError.value = err
-
             return false
         }
         finally {
@@ -161,20 +183,17 @@ export const useOrders = () => {
     }
 
     return {
-        // لیست سفارش‌ها
         orders,
         pending,
         error,
         refresh,
 
-        // جزئیات سفارش
         order,
         orderPending,
         orderError,
         getOrderById,
         clearOrder,
 
-        // لغو و مرجوعی
         actionPending,
         actionError,
         actionMessage,

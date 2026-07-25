@@ -1,5 +1,7 @@
 export default defineNuxtPlugin(() => {
-    const userStore = useUserStore()
+    const { token, user, fetchUser } = useAuth()
 
-    userStore.loadUser()
+    if (token.value && !user.value) {
+        fetchUser()
+    }
 })

@@ -51,7 +51,7 @@ const closeDropdown = () => {
       <div v-else class="space-y-3 max-h-64 overflow-y-auto">
         <div
             v-for="item in cartStore.items"
-            :key="item.product.id"
+            :key="`${item.product.id}:${item.weightPackageId ?? 'default'}`"
             class="flex items-center gap-3"
         >
           <img
@@ -64,14 +64,17 @@ const closeDropdown = () => {
             <h4 class="text-sm font-medium text-text">
               {{ item.product.title }}
             </h4>
+            <p v-if="item.selectedWeight" class="text-xs text-stone-400">
+              {{ item.selectedWeight }}{{ item.selectedWeightUnit === 'kg' ? 'kg' : 'g' }}
+            </p>
             <p class="text-xs text-stone-500">
-              {{ cartStore.formatPrice(item.product.price) }} × {{ item.quantity }}
+              {{ cartStore.formatPrice(Math.round(item.product.price / 10)) }} × {{ item.quantity }}
             </p>
           </div>
 
           <button
               class="text-red-500 hover:text-red-600 text-sm"
-              @click="cartStore.removeFromCart(item.product.id)"
+              @click="cartStore.removeFromCart(item.product.id, item.weightPackageId)"
           >
             حذف
           </button>

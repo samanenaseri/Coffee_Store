@@ -12,7 +12,9 @@ export const products: Product[] = [
         description: "اسپرسوی اصیل ایتالیایی با طعمی قوی و غلیظ، مناسب برای شروع یک روز پرانرژی",
         rating: 4.8,
         inventory: 50,
+        isFavorite: true,
     },
+
     {
         id: 2,
         title: "Latte",
@@ -24,6 +26,7 @@ export const products: Product[] = [
         description: "لاته نرم و کرمی با ترکیب اسپرسو و شیر تازه، طعمی ملایم و دلنشین",
         rating: 4.6,
         inventory: 40,
+        isFavorite: true,
     },
     {
         id: 3,
@@ -36,6 +39,7 @@ export const products: Product[] = [
         description: "کاپوچینوی کلاسیک با فوم شیر غلیظ و پودر کاکائو، انتخابی عالی برای عصرهای پاییزی",
         rating: 4.7,
         inventory: 35,
+        isFavorite: false,
     },
     {
         id: 4,
@@ -48,6 +52,7 @@ export const products: Product[] = [
         description: "قهوه فوری آل کافه با عطر و طعمی مطبوع، آماده در چند ثانیه",
         rating: 4.2,
         inventory: 100,
+        isFavorite: false,
     },
     {
         id: 5,
