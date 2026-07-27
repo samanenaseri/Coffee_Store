@@ -72,36 +72,54 @@ const { loginUrl } = useAuthRedirect()
 
 const isHome = computed(() => route.path === "/")
 const isScrolled = ref(false)
-const heroHeight = ref(600)
+const heroHeight = ref(0)
+const isDark = ref(false)
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > heroHeight.value - 100
+  if (!isHome.value) return
+  isScrolled.value = window.scrollY >= heroHeight.value - window.innerHeight
 }
 
-/**
- * Main logo by default; optional alternate after scroll on home.
- * If only one logo is set, use it everywhere.
- */
+const checkDark = () => {
+  isDark.value = document.documentElement.classList.contains('dark')
+}
+
 const logoSrc = computed(() => {
   const main = settings.value.store_logo?.trim() || ''
   const alternate = settings.value.store_dark_logo?.trim() || ''
+  const innerLogo = settings.value.store_inner_logo?.trim() || ''
+  const innerDarkLogo = settings.value.store_inner_dark_logo?.trim() || ''
 
-  if (isHome.value && isScrolled.value) {
-    const src = alternate || main
+  if (isHome.value) {
+    if (isScrolled.value) {
+      const src = alternate || main
+      return src ? resolveUrl(src) : ''
+    }
+    const src = main || alternate
     return src ? resolveUrl(src) : ''
   }
 
-  const src = main || alternate
+  if (isDark.value) {
+    const src = innerLogo || main
+    return src ? resolveUrl(src) : ''
+  }
+  const src = innerDarkLogo || main
   return src ? resolveUrl(src) : ''
 })
 
 onMounted(() => {
   fetchSettings()
+  checkDark()
   const heroEl = document.querySelector('[data-hero]') as HTMLElement | null
   if (heroEl) {
     heroHeight.value = heroEl.offsetHeight
   }
+  handleScroll()
   window.addEventListener('scroll', handleScroll)
+
+  const observer = new MutationObserver(() => checkDark())
+  observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
+  onUnmounted(() => observer.disconnect())
 })
 
 onUnmounted(() => {

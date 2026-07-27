@@ -1,0 +1,136 @@
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import PrimeVue from 'primevue/config'
+import Aura from '@primevue/themes/aura'
+import ToastService from 'primevue/toastservice'
+import ConfirmationService from 'primevue/confirmationservice'
+import App from './App.vue'
+import router from './router'
+import './assets/styles/main.css'
+
+import 'primeicons/primeicons.css'
+
+const app = createApp(App)
+
+app.use(createPinia())
+app.use(router)
+app.use(PrimeVue, {
+  theme: {
+    preset: Aura,
+    options: {
+      prefix: 'p',
+      darkModeSelector: '.dark-mode',
+      cssLayer: false,
+    },
+  },
+  ripple: true,
+  locale: {
+    startsWith: 'شروع با',
+    contains: 'شامل',
+    notContains: 'شامل نیست',
+    endsWith: 'پایان با',
+    equals: 'برابر با',
+    notEquals: 'برابر نباشد',
+    noFilter: 'بدون فیلتر',
+    lt: 'کمتر از',
+    lte: 'کمتر یا مساوی',
+    gt: 'بیشتر از',
+    gte: 'بیشتر یا مساوی',
+    dateIs: 'تاریخ برابر است',
+    dateIsNot: 'تاریخ برابر نیست',
+    dateBefore: 'تاریخ قبل از',
+    dateAfter: 'تاریخ بعد از',
+    clear: 'پاک کردن',
+    apply: 'اعمال',
+    matchAll: 'تطابق با همه',
+    matchAny: 'تطابق با هر کدام',
+    addRule: 'افزودن قانون',
+    removeRule: 'حذف قانون',
+    accept: 'پذیرفتن',
+    reject: 'رد کردن',
+    choose: 'انتخاب',
+    upload: 'آپلود',
+    cancel: 'لغو',
+    completed: 'تکمیل شده',
+    pending: 'در انتظار',
+    dayNames: ['یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنجشنبه', 'جمعه', 'شنبه'],
+    dayNamesShort: ['یک', 'دو', 'سه', 'چه', 'پن', 'جم', 'شن'],
+    dayNamesMin: ['ی', 'د', 'س', 'چ', 'پ', 'ج', 'ش'],
+    monthNames: ['ژانویه', 'فوریه', 'مارس', 'آوریل', 'مه', 'ژوئن', 'ژوئیه', 'اوت', 'سپتامبر', 'اکتبر', 'نوامبر', 'دسامبر'],
+    monthNamesShort: ['ژان', 'فور', 'مارس', 'آور', 'مه', 'ژوئن', 'ژوئی', 'اوت', 'سپت', 'اکت', 'نوا', 'دس'],
+    chooseYear: 'انتخاب سال',
+    chooseMonth: 'انتخاب ماه',
+    chooseDate: 'انتخاب تاریخ',
+    prevDecade: 'دهه قبل',
+    nextDecade: 'دهه بعد',
+    prevYear: 'سال قبل',
+    nextYear: 'سال بعد',
+    prevMonth: 'ماه قبل',
+    nextMonth: 'ماه بعد',
+    prevHour: 'ساعت قبل',
+    nextHour: 'ساعت بعد',
+    prevMinute: 'دقیقه قبل',
+    nextMinute: 'دقیقه بعد',
+    prevSecond: 'ثانیه قبل',
+    nextSecond: 'ثانیه بعد',
+    am: 'ق.ظ',
+    pm: 'ب.ظ',
+    today: 'امروز',
+    weekHeader: 'هفته',
+    firstDayOfWeek: 6,
+    showMonthAfterYear: false,
+    dateFormat: 'yy/mm/dd',
+    weak: 'ضعیف',
+    medium: 'متوسط',
+    strong: 'قوی',
+    passwordPrompt: 'رمز عبور را وارد کنید',
+    emptyFilterMessage: 'نتیجه‌ای یافت نشد',
+    searchMessage: '{0} نتیجه موجود است',
+    selectionMessage: '{0} آیتم انتخاب شده',
+    emptySelectionMessage: 'هیچ آیتمی انتخاب نشده',
+    emptySearchMessage: 'نتیجه‌ای یافت نشد',
+    emptyMessage: 'گزینه‌ای موجود نیست',
+    aria: {
+      trueLabel: 'بله',
+      falseLabel: 'خیر',
+      nullLabel: 'انتخاب نشده',
+      pageLabel: 'صفحه',
+      firstPageLabel: 'صفحه اول',
+      lastPageLabel: 'صفحه آخر',
+      nextPageLabel: 'صفحه بعد',
+      prevPageLabel: 'صفحه قبل',
+      jumpToPageLabel: 'رفتن به صفحه',
+      selectLabel: 'انتخاب',
+      unselectLabel: 'انتخاب نشده',
+      expandLabel: 'باز کردن',
+      collapseLabel: 'بستن',
+      filterLabel: 'فیلتر',
+      closeLabel: 'بستن',
+      revealLabel: 'نشان دادن',
+      previousLabel: 'قبلی',
+      nextLabel: 'بعدی',
+      navigation: 'ناوبری',
+      scrollTop: 'رفتن به بالا',
+      moveTopToTop: 'رفتن به بالاترین',
+      moveTopToBottom: 'رفتن به پایین‌ترین',
+      moveUpToUp: 'رفتن به بالا',
+      moveUpToDown: 'رفتن به پایین',
+      moveDownToDown: 'رفتن به پایین‌ترین',
+      moveDownToUp: 'رفتن به بالا',
+      moveBottomToTop: 'رفتن به بالاترین',
+      moveBottomToBottom: 'رفتن به پایین‌ترین',
+      moveToTarget: 'رفتن به هدف',
+      moveToSource: 'رفتن به مبدا',
+      moveAllToTarget: 'رفتن همه به هدف',
+      moveAllToSource: 'رفتن همه به مبدا',
+      reorder: 'ترتیب مجدد',
+      accessTrueLabel: 'بله',
+      accessFalseLabel: 'خیر',
+      accessNullLabel: 'انتخاب نشده',
+    },
+  },
+})
+app.use(ToastService)
+app.use(ConfirmationService)
+
+app.mount('#app')

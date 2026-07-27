@@ -93,7 +93,7 @@ const closeDropdown = () => {
         </NuxtLink>
 
         <NuxtLink
-            to="/checkout"
+            :to="cartStore.items.length > 0 ? '/checkout' : '/cart'"
             @click="closeDropdown"
         >
           <base-button>تسویه حساب</base-button>
