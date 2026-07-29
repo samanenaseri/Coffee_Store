@@ -6,7 +6,6 @@
       : isHome
         ? 'bg-transparent'
         : 'bg-background'
-
     ]">
 
     <div class="container mx-auto px-4">
@@ -20,9 +19,11 @@
           />
           <Logo v-else :class="['h-8 w-auto dark:text-lightText text-testimonial mt-3 mb-3']" />
         </NuxtLink>
-        <div class="flex items-center gap-6">
+
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex items-center gap-6">
           <ul :class="[
-              'flex flex-col lg:flex-row items-center gap-6',
+              'flex flex-row items-center gap-6',
             isHome
              ? (isScrolled ? 'text-lightText' : 'text-white')
                : 'text-lightText'
@@ -40,7 +41,7 @@
             <li v-if="isLoggedIn">
               <NuxtLink to="/profile" class="hover:text-lightText flex items-center gap-1.5">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                <span class="text-sm hidden lg:inline">پروفایل</span>
+                <span class="text-sm">پروفایل</span>
               </NuxtLink>
             </li>
             <li v-else>
@@ -49,18 +50,83 @@
                 class="bg-amber-600/90 hover:bg-amber-500 text-white text-sm px-4 py-2 rounded-lg transition-all duration-200 flex items-center gap-1.5 shadow-lg shadow-amber-600/20"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-                <span class="hidden lg:inline">ورود</span>
+                <span class="text-sm">ورود</span>
               </NuxtLink>
             </li>
           </ul>
           <ThemeToggle/>
         </div>
+
+        <!-- Mobile: cart + hamburger -->
+        <div class="flex lg:hidden items-center gap-3" :class="isHome && !isScrolled ? 'text-white' : 'text-text'">
+          <NuxtLink to="/cart" class="hover:text-lightText">
+            <CartDropdown class="hover:text-lightText"/>
+          </NuxtLink>
+          <ThemeToggle/>
+          <button
+            type="button"
+            class="p-2 rounded-lg hover:bg-black/10 transition-colors"
+            @click="mobileOpen = !mobileOpen"
+            aria-label="منو"
+          >
+            <svg v-if="!mobileOpen" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </nav>
     </div>
+
+    <!-- Mobile menu overlay -->
+    <Transition name="fade">
+      <div
+        v-if="mobileOpen"
+        class="fixed inset-0 top-16 bg-background/95 backdrop-blur-lg z-40 lg:hidden"
+        @click="mobileOpen = false"
+      >
+        <nav class="container mx-auto px-4 py-6" @click.stop>
+          <ul class="flex flex-col gap-1">
+            <li v-for="link in settings.header_links" :key="link.url">
+              <NuxtLink
+                :to="link.url"
+                class="block py-3 px-4 text-text rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors font-medium"
+                @click="mobileOpen = false"
+              >
+                {{ link.label }}
+              </NuxtLink>
+            </li>
+            <li class="border-t border-stone-200 dark:border-stone-700 my-2"></li>
+            <li v-if="isLoggedIn">
+              <NuxtLink
+                to="/profile"
+                class="flex items-center gap-2 py-3 px-4 text-text rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors font-medium"
+                @click="mobileOpen = false"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                پروفایل
+              </NuxtLink>
+            </li>
+            <li v-else>
+              <NuxtLink
+                :to="loginUrl"
+                class="block py-3 px-4 bg-amber-600 text-white text-center rounded-xl font-medium"
+                @click="mobileOpen = false"
+              >
+                ورود / ثبت‌نام
+              </NuxtLink>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </Transition>
   </header>
 </template>
+
 <script setup lang="ts">
-import {ref, onMounted, onUnmounted} from 'vue'
+import {ref, onMounted, onUnmounted, watch} from 'vue'
 import ThemeToggle from "~/components/common/ThemeToggle.vue";
 import Logo from '~/assets/icons/logo.svg'
 import CartDropdown from "~/components/ui/CartDropdown.vue";
@@ -74,6 +140,7 @@ const isHome = computed(() => route.path === "/")
 const isScrolled = ref(false)
 const heroHeight = ref(0)
 const isDark = ref(false)
+const mobileOpen = ref(false)
 
 const handleScroll = () => {
   if (!isHome.value) return
@@ -107,6 +174,8 @@ const logoSrc = computed(() => {
   return src ? resolveUrl(src) : ''
 })
 
+watch(() => route.path, () => { mobileOpen.value = false })
+
 onMounted(() => {
   fetchSettings()
   checkDark()
@@ -126,3 +195,12 @@ onUnmounted(() => {
   window.removeEventListener('scroll', handleScroll)
 })
 </script>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+}
+</style>

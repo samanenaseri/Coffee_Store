@@ -6,35 +6,35 @@
       <p class="font-bold sm:text-3xl text-3xl text-cups">{{ heading }}</p>
       <p class="font-normal sm:text-lg text-base text-lightText">{{ paragraph }}</p>
 
-     <div class="flex flex-cols-2 gap-10  items-start justify-start text-l font-bold">
-        <div v-for="(drink, i) in displayedDrinksTop" :key="i" class="flex flex-1 items-start gap-6">
-       <div class="flex justify-center items-start ">
-         <img v-if="isImageUrl(drink.icon)" :src="drink.icon" :alt="drink.title" class="h-16 w-16 object-contain" />
-         <component v-else :is="getDrinkIcon(drink.icon)" class="h-16 w-16 text-cups" />
+     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start text-l font-bold">
+        <div v-for="(drink, i) in displayedDrinksTop" :key="i" class="flex items-start gap-4">
+       <div class="flex-shrink-0 flex justify-center items-start ">
+         <img v-if="isImageUrl(drink.icon)" :src="drink.icon" :alt="drink.title" class="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
+         <component v-else :is="getDrinkIcon(drink.icon)" class="h-14 w-14 sm:h-16 sm:w-16 text-cups" />
        </div>
-       <div class="flex flex-col items-start gap-6">
-         <p class="text-lg font-bold text-cups">{{ drink.title }}</p>
-         <p class="text-base font-medium text-lightText">{{ drink.description }}</p>
+       <div class="flex flex-col items-start gap-4">
+         <p class="text-base sm:text-lg font-bold text-cups">{{ drink.title }}</p>
+         <p class="text-sm sm:text-base font-medium text-lightText">{{ drink.description }}</p>
        </div>
      </div>
       </div>
-      <div class="flex  flex-cols-2 gap-4 items-start justify-start text-l font-bold">
-        <div v-for="(drink, i) in displayedDrinksBottom" :key="i" class="flex flex-1 items-start gap-6">
-          <div class="flex justify-center items-start ">
-            <img v-if="isImageUrl(drink.icon)" :src="drink.icon" :alt="drink.title" class="h-16 w-16 object-contain" />
-            <component v-else :is="getDrinkIcon(drink.icon)" class="h-16 w-16 text-cups" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start text-l font-bold">
+        <div v-for="(drink, i) in displayedDrinksBottom" :key="i" class="flex items-start gap-4">
+          <div class="flex-shrink-0 flex justify-center items-start ">
+            <img v-if="isImageUrl(drink.icon)" :src="drink.icon" :alt="drink.title" class="h-14 w-14 sm:h-16 sm:w-16 object-contain" />
+            <component v-else :is="getDrinkIcon(drink.icon)" class="h-14 w-14 sm:h-16 sm:w-16 text-cups" />
           </div>
-          <div class="flex flex-col items-start gap-6">
-            <p class="text-lg font-bold text-cups">{{ drink.title }}</p>
-            <p class="text-base font-medium text-lightText">{{ drink.description }}</p>
+          <div class="flex flex-col items-start gap-4">
+            <p class="text-base sm:text-lg font-bold text-cups">{{ drink.title }}</p>
+            <p class="text-sm sm:text-base font-medium text-lightText">{{ drink.description }}</p>
           </div>
         </div>
       </div>
     </div>
-    <div class="flex py-12 items-end justify-end">
-      <div class="relative w-[400px] h-[400px]">
+    <div class="flex py-12 items-center justify-center lg:items-end lg:justify-end">
+      <div class="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] lg:w-[400px] lg:h-[400px]">
         <!-- دایره بزرگ -->
-        <div class="w-[400px] h-[400px] rounded-full bg-stone-700 border border-border border-[12px]">
+        <div class="w-full h-full rounded-full bg-stone-700 border border-border border-[8px] sm:border-[12px]">
           <img
               :src="mainImage"
               class="w-full h-full object-cover rounded-full"
@@ -44,19 +44,19 @@
 
         <!-- دایره عدد تجربه -->
         <div
-            class="absolute -top-5 left-22 translate-x-1/3
-           w-40 h-40 rounded-full bg-card border border-border border-[12px]
+            class="absolute -top-12 left-28 sm:-top-5 sm:left-22 translate-x-1/3
+           w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-full bg-card border border-border border-[8px] sm:border-[12px]
            flex flex-col items-center justify-center"
         >
-          <span class="text-3xl font-black text-cups">+{{ animatedNumber }}</span>
-          <span class="text-xs text-lightText mt-1">{{ experienceLabel }}</span>
+          <span class="text-2xl sm:text-3xl font-black text-cups">+{{ animatedNumber }}</span>
+          <span class="text-[10px] sm:text-xs text-lightText mt-1">{{ experienceLabel }}</span>
         </div>
 
         <!-- دایره چرخان -->
         <div
-            class="absolute -bottom-10 left-10 -translate-x-1/2
-           w-40 h-40 rounded-full overflow-hidden
-            border border-border border-[12px]
+            class="absolute -bottom-6 sm:-bottom-10 left-4 sm:left-10 -translate-x-1/2
+           w-28 h-28 sm:w-36 sm:h-36 lg:w-40 lg:h-40 rounded-full overflow-hidden
+            border border-border border-[8px] sm:border-[12px]
          "
         >
           <img

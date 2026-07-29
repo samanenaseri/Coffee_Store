@@ -9,6 +9,7 @@ import TestimonialSection from "~/components/ui/mainPage/testimonialSection.vue"
 import ArticlesSection from "~/components/ui/mainPage/articlesSection.vue";
 
 const { public: { apiBase } } = useRuntimeConfig()
+const { resolveUrl } = useImageUrl()
 
 interface Section {
   id: number
@@ -74,7 +75,8 @@ useHead({
       v-if="hasSection('hero')"
       :media-type="getSection('hero')?.content?.mediaType || 'video'"
       :video-src="getSection('hero')?.content?.videoSrc"
-      :image-src="getSection('hero')?.content?.imageSrc"
+      :image-src="resolveUrl(getSection('hero')?.content?.imageSrc)"
+      :mobile-image-src="resolveUrl(getSection('hero')?.content?.mobileImageSrc)"
       :heading="getSection('hero')?.title"
       :subtitle="getSection('hero')?.subtitle"
       :scroll-height="getSection('hero')?.content?.scrollHeight"
@@ -87,8 +89,8 @@ useHead({
       v-if="hasSection('about')"
       :heading="getSection('about')?.title"
       :paragraph="getSection('about')?.description"
-      :main-image="getSection('about')?.image"
-      :secondary-image="getSection('about')?.content?.secondaryImage"
+      :main-image="resolveUrl(getSection('about')?.image)"
+      :secondary-image="resolveUrl(getSection('about')?.content?.secondaryImage)"
       :experience-number="getSection('about')?.content?.experienceNumber"
       :experience-label="getSection('about')?.content?.experienceLabel"
       :drinks="getSection('about')?.content?.drinks"
@@ -124,7 +126,7 @@ useHead({
       v-if="hasSection('testimonials')"
       :heading="getSection('testimonials')?.title"
       :subtitle="getSection('testimonials')?.subtitle"
-      :background-image="getSection('testimonials')?.image"
+      :background-image="resolveUrl(getSection('testimonials')?.image)"
     />
     <TestimonialSection v-else />
 
@@ -140,7 +142,7 @@ useHead({
     <!-- Banner Section -->
     <PicSection
       v-if="hasSection('banner')"
-      :background-image="getSection('banner')?.image"
+      :background-image="resolveUrl(getSection('banner')?.image)"
       :quote="getSection('banner')?.description"
       :link="getSection('banner')?.link"
       :link-text="getSection('banner')?.link_text"

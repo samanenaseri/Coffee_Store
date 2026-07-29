@@ -97,7 +97,7 @@ const defaultSettings = (): Settings => ({
   contact_map_background: '/images/footer.webp',
   contact_map_title: 'موقعیت فروشگاه روی نقشه',
   contact_map_description: 'بعداً می‌تونی این قسمت رو با Google Map یا Leaflet جایگزین کنی.',
-  site_url: 'https://coffee-store.example.com',
+  site_url: 'https://beanhouse.ir',
   default_meta_title: 'کافه استور | فروشگاه تخصصی قهوه',
   default_meta_description: 'کافه استور با بیش از ۵ سال تجربه، بهترین قهوه‌ها و دسرهای تازه را با کیفیت بالا و قیمت مناسب ارائه می‌دهد.',
   default_og_image: '/images/og-image.jpg',

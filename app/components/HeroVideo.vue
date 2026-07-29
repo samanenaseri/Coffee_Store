@@ -1,9 +1,9 @@
 <template>
-  <section id="hero" data-hero class="relative w-full" :style="{ height: scrollHeight + 'vh' }">
+  <section id="hero" data-hero class="relative w-full" :style="{ height: heroHeightStyle }">
     <div class="sticky top-0 h-screen overflow-hidden">
-      <!-- Video mode -->
+      <!-- Desktop: video -->
       <video
-          v-if="mediaType === 'video'"
+          v-if="mediaType === 'video' && !isMobile"
           ref="videoRef"
           class="absolute inset-0 w-full h-full object-cover scale-110"
           muted
@@ -13,12 +13,12 @@
         <source :src="videoSrc" type="video/mp4" />
       </video>
 
-      <!-- Image mode -->
+      <!-- Mobile: mobileImageSrc if set, else imageSrc -->
       <img
           v-else
-          :src="imageSrc"
-          :alt="slides[activeSlide]?.heading"
-          class="absolute inset-0 w-full h-full object-cover scale-110"
+          :src="isMobile && mobileImageSrc ? mobileImageSrc : (imageSrc || '/images/hero-default.jpg')"
+          :alt="activeSlides[activeSlide]?.heading"
+          class="absolute inset-0 w-full h-full object-cover"
       />
 
       <div
@@ -31,12 +31,12 @@
         <Transition :name="slideDirection" mode="out-in">
           <div :key="activeSlide" class="slide-content">
             <h1
-                class="text-5xl md:text-7xl font-bold text-white tracking-wider transition-all duration-700"
+                class="text-4xl sm:text-5xl md:text-7xl font-bold text-white tracking-wider transition-all duration-700"
             >
               {{ activeSlides[activeSlide]?.heading }}
             </h1>
 
-            <div class="mt-4 text-lg md:text-2xl text-stone-200 space-y-2">
+            <div class="mt-4 text-base sm:text-lg md:text-2xl text-stone-200 space-y-2">
               <p
                   v-for="(line, i) in activeSlides[activeSlide]?.lines"
                   :key="i"
@@ -96,6 +96,7 @@ const props = defineProps({
   mediaType: { type: String, default: 'video' },
   videoSrc: { type: String, default: '/videos/scroll-video-final.mp4' },
   imageSrc: { type: String, default: '/images/hero-default.jpg' },
+  mobileImageSrc: { type: String, default: '' },
   heading: { type: String, default: 'عطر قهوه' },
   subtitle: { type: String, default: 'هر فنجان، یک داستان' },
   scrollHeight: { type: Number, default: 500 },
@@ -125,6 +126,13 @@ const activeSlides = computed(() => {
 const activeSlide = ref(0)
 const slideDirection = ref('slide-up')
 const videoRef = ref(null)
+const isMobile = ref(false)
+
+const heroHeightStyle = computed(() => {
+  return isMobile.value ? '100vh' : props.scrollHeight + 'vh'
+})
+
+let autoSlideTimer = null
 
 function goToSlide(index) {
   if (index === activeSlide.value) return
@@ -132,11 +140,45 @@ function goToSlide(index) {
   activeSlide.value = index
 }
 
+function startAutoSlide() {
+  stopAutoSlide()
+  autoSlideTimer = setInterval(() => {
+    const next = (activeSlide.value + 1) % activeSlides.value.length
+    goToSlide(next)
+  }, 4000)
+}
+
+function stopAutoSlide() {
+  if (autoSlideTimer) {
+    clearInterval(autoSlideTimer)
+    autoSlideTimer = null
+  }
+}
+
 onMounted(() => {
+  isMobile.value = window.innerWidth < 768
+  const onResize = () => {
+    const wasMobile = isMobile.value
+    isMobile.value = window.innerWidth < 768
+    if (isMobile.value && !wasMobile) {
+      stopAutoSlide()
+      startAutoSlide()
+    } else if (!isMobile.value && wasMobile) {
+      stopAutoSlide()
+    }
+  }
+  window.addEventListener('resize', onResize)
+
+  if (isMobile.value) {
+    startAutoSlide()
+  }
+
   const heroSection = document.getElementById('hero')
   if (!heroSection) return
 
+  // Desktop: scroll-based slide changes
   const updateSlide = () => {
+    if (isMobile.value) return
     const scrollTop = window.scrollY
     const start = heroSection.offsetTop
     const end = start + heroSection.offsetHeight - window.innerHeight
@@ -154,12 +196,12 @@ onMounted(() => {
 
   window.addEventListener('scroll', updateSlide)
 
-  // Video sync
+  // Desktop: video sync
   if (props.mediaType === 'video') {
     const video = videoRef.value
     if (video) {
       const updateVideo = () => {
-        if (!video?.duration) return
+        if (!video?.duration || isMobile.value) return
         const scrollTop = window.scrollY
         const start = heroSection.offsetTop
         const end = start + heroSection.offsetHeight - window.innerHeight
@@ -172,7 +214,11 @@ onMounted(() => {
     }
   }
 
-  onUnmounted(() => window.removeEventListener('scroll', updateSlide))
+  onUnmounted(() => {
+    window.removeEventListener('scroll', updateSlide)
+    window.removeEventListener('resize', onResize)
+    stopAutoSlide()
+  })
 })
 </script>
 

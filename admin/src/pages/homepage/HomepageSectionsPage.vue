@@ -86,8 +86,13 @@
               <InputText v-model="heroContent.videoSrc" class="w-full" placeholder="/videos/scroll-video-final.mp4" />
             </div>
             <div v-else>
-              <label class="block text-sm font-medium text-gray-700 mb-1">تصویر بنر</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1">تصویر بنر (دسکتاپ)</label>
               <ImageUploader v-model="heroContent.imageSrc" folder="homepage" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">تصویر بنر (موبایل)</label>
+              <p class="text-xs text-gray-500 mb-2">در صورت خالی بودن، تصویر اصلی دسکتاپ نمایش داده می‌شود</p>
+              <ImageUploader v-model="heroContent.mobileImageSrc" folder="homepage" />
             </div>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-1">ارتفاع اسکرول (vh)</label>
@@ -422,7 +427,7 @@ const form = ref({
   is_active: true,
 })
 
-const heroContent = reactive({ mediaType: 'video' as 'video' | 'image', videoSrc: '/videos/scroll-video-final.mp4', imageSrc: '', scrollHeight: 500, slides: [] as { heading: string; lines: string[] }[] })
+const heroContent = reactive({ mediaType: 'video' as 'video' | 'image', videoSrc: '/videos/scroll-video-final.mp4', imageSrc: '', mobileImageSrc: '', scrollHeight: 500, slides: [] as { heading: string; lines: string[] }[] })
 const aboutContent = reactive({ secondaryImage: '', experienceNumber: 7, experienceLabel: 'سال تجربه', drinks: [] as { title: string; description: string; icon: string }[] })
 const productsContent = reactive({ limit: 4 })
 const servicesContent = reactive({ cards: [] as { title: string; description: string; icon: string }[] })
@@ -447,6 +452,7 @@ function resetEditors() {
   heroContent.mediaType = 'video'
   heroContent.videoSrc = '/videos/scroll-video-final.mp4'
   heroContent.imageSrc = ''
+  heroContent.mobileImageSrc = ''
   heroContent.scrollHeight = 500
   heroContent.slides = []
   aboutContent.secondaryImage = ''
@@ -495,6 +501,7 @@ function openEdit(section: HomepageSection) {
       heroContent.mediaType = c.mediaType || 'video'
       heroContent.videoSrc = c.videoSrc || '/videos/scroll-video-final.mp4'
       heroContent.imageSrc = c.imageSrc || ''
+      heroContent.mobileImageSrc = c.mobileImageSrc || ''
       heroContent.scrollHeight = c.scrollHeight || 500
       heroContent.slides = c.slides || [
         { heading: section.title || 'عطر قهوه', lines: [section.subtitle || 'هر فنجان، یک داستان'] },
@@ -532,7 +539,7 @@ async function save() {
   let content: any = null
   switch (form.value.type) {
     case 'hero':
-      content = { mediaType: heroContent.mediaType, videoSrc: heroContent.videoSrc, imageSrc: heroContent.imageSrc, scrollHeight: heroContent.scrollHeight, slides: heroContent.slides }
+      content = { mediaType: heroContent.mediaType, videoSrc: heroContent.videoSrc, imageSrc: heroContent.imageSrc, mobileImageSrc: heroContent.mobileImageSrc, scrollHeight: heroContent.scrollHeight, slides: heroContent.slides }
       break
     case 'about':
       content = { secondaryImage: aboutContent.secondaryImage, experienceNumber: aboutContent.experienceNumber, experienceLabel: aboutContent.experienceLabel, drinks: aboutContent.drinks }
