@@ -4,6 +4,7 @@ import { ref } from "vue"
 import { RiShoppingCartLine } from "@remixicon/vue"
 
 const cartStore = useCartStore()
+const { resolveUrl } = useImageUrl()
 const showDropdown = ref(false)
 
 const toggleDropdown = (state?: boolean) => {
@@ -15,13 +16,26 @@ const toggleDropdown = (state?: boolean) => {
 const closeDropdown = () => {
   showDropdown.value = false
 }
+
+const goToCart = () => {
+  closeDropdown()
+  navigateTo('/cart')
+}
+
+const goToCheckout = () => {
+  closeDropdown()
+  navigateTo(cartStore.items.length > 0 ? '/checkout' : '/cart')
+}
 </script>
 
 <template>
   <div class="relative">
     <!-- آیکن سبد خرید -->
     <button
+        type="button"
         @mouseenter="toggleDropdown(true)"
+        @click="goToCart"
+        aria-label="مشاهده سبد خرید"
         class="relative flex items-center justify-center text-text"
     >
       <RiShoppingCartLine class="size-6" />
@@ -55,7 +69,7 @@ const closeDropdown = () => {
             class="flex items-center gap-3"
         >
           <img
-              :src="item.product.image"
+              :src="resolveUrl(item.product.image) || '/images/great-coffee-bean.jpeg'"
               :alt="item.product.title"
               class="w-12 h-12 object-cover rounded-lg"
           />
@@ -84,21 +98,8 @@ const closeDropdown = () => {
       <!-- دکمه‌ها -->
       <div class="mt-4 flex gap-3" @mouseleave="toggleDropdown(true)">
 
-        <NuxtLink
-            to="/cart"
-            @click="closeDropdown"
-        >
-          <base-button> مشاهده سبد</base-button>
-
-        </NuxtLink>
-
-        <NuxtLink
-            :to="cartStore.items.length > 0 ? '/checkout' : '/cart'"
-            @click="closeDropdown"
-        >
-          <base-button>تسویه حساب</base-button>
-
-        </NuxtLink>
+        <base-button @click="goToCart">مشاهده سبد</base-button>
+        <base-button @click="goToCheckout">تسویه حساب</base-button>
       </div>
     </div>
   </div>

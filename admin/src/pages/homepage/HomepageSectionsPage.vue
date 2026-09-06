@@ -65,27 +65,8 @@
         <!-- ===== HERO EDITOR ===== -->
         <template v-if="form.type === 'hero'">
           <div class="border border-amber-200 rounded-lg p-4 bg-amber-50/50 space-y-4">
-            <h3 class="font-bold text-amber-800"><i class="pi pi-video ml-1"></i> ویرایش بنر اصلی (Hero)</h3>
+            <h3 class="font-bold text-amber-800"><i class="pi pi-image ml-1"></i> ویرایش بنر تصویری اصلی (Hero)</h3>
             <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">نوع رسانه</label>
-              <div class="flex gap-3">
-                <button type="button" @click="heroContent.mediaType = 'video'"
-                  class="flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all text-sm"
-                  :class="heroContent.mediaType === 'video' ? 'border-amber-600 bg-amber-100 text-amber-800' : 'border-gray-200 text-gray-600 hover:border-gray-300'">
-                  <i class="pi pi-video"></i> ویدیو
-                </button>
-                <button type="button" @click="heroContent.mediaType = 'image'"
-                  class="flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all text-sm"
-                  :class="heroContent.mediaType === 'image' ? 'border-amber-600 bg-amber-100 text-amber-800' : 'border-gray-200 text-gray-600 hover:border-gray-300'">
-                  <i class="pi pi-image"></i> تصویر
-                </button>
-              </div>
-            </div>
-            <div v-if="heroContent.mediaType === 'video'">
-              <label class="block text-sm font-medium text-gray-700 mb-1">آدرس ویدیو</label>
-              <InputText v-model="heroContent.videoSrc" class="w-full" placeholder="/videos/scroll-video-final.mp4" />
-            </div>
-            <div v-else>
               <label class="block text-sm font-medium text-gray-700 mb-1">تصویر بنر (دسکتاپ)</label>
               <ImageUploader v-model="heroContent.imageSrc" folder="homepage" />
             </div>
@@ -94,16 +75,11 @@
               <p class="text-xs text-gray-500 mb-2">در صورت خالی بودن، تصویر اصلی دسکتاپ نمایش داده می‌شود</p>
               <ImageUploader v-model="heroContent.mobileImageSrc" folder="homepage" />
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-1">ارتفاع اسکرول (vh)</label>
-              <InputNumber v-model="heroContent.scrollHeight" class="w-full" :min="100" :max="2000" placeholder="500" />
-            </div>
-
             <!-- Slides editor -->
             <div class="border-t pt-4 mt-4">
               <div class="flex items-center justify-between mb-3">
                 <label class="text-sm font-bold text-amber-800">اسلایدهای متنی</label>
-                <span class="text-xs text-gray-500">با اسکرول تغییر می‌کنند</span>
+                <span class="text-xs text-gray-500">به‌صورت خودکار تغییر می‌کنند</span>
               </div>
               <div v-for="(slide, index) in heroContent.slides" :key="index" class="border border-amber-200 rounded-lg p-3 mb-3 space-y-2 bg-white">
                 <div class="flex items-center justify-between">
@@ -386,7 +362,7 @@ const editingId = ref<number | null>(null)
 const saving = ref(false)
 
 const typeOptions = [
-  { label: 'بنر اصلی', value: 'hero', icon: 'pi pi-video', desc: 'HeroVideo' },
+  { label: 'بنر اصلی', value: 'hero', icon: 'pi pi-image', desc: 'Hero image' },
   { label: 'معرفی', value: 'about', icon: 'pi pi-info-circle', desc: 'DescribeSection' },
   { label: 'محصولات', value: 'products', icon: 'pi pi-shopping-bag', desc: 'ProductSection' },
   { label: 'خدمات', value: 'services', icon: 'pi pi-truck', desc: 'OrderSection' },
@@ -427,7 +403,7 @@ const form = ref({
   is_active: true,
 })
 
-const heroContent = reactive({ mediaType: 'video' as 'video' | 'image', videoSrc: '/videos/scroll-video-final.mp4', imageSrc: '', mobileImageSrc: '', scrollHeight: 500, slides: [] as { heading: string; lines: string[] }[] })
+const heroContent = reactive({ mediaType: 'image' as const, imageSrc: '/images/Coffee_Beans.webp', mobileImageSrc: '', slides: [] as { heading: string; lines: string[] }[] })
 const aboutContent = reactive({ secondaryImage: '', experienceNumber: 7, experienceLabel: 'سال تجربه', drinks: [] as { title: string; description: string; icon: string }[] })
 const productsContent = reactive({ limit: 4 })
 const servicesContent = reactive({ cards: [] as { title: string; description: string; icon: string }[] })
@@ -449,11 +425,9 @@ async function fetchSections() {
 }
 
 function resetEditors() {
-  heroContent.mediaType = 'video'
-  heroContent.videoSrc = '/videos/scroll-video-final.mp4'
-  heroContent.imageSrc = ''
+  heroContent.mediaType = 'image'
+  heroContent.imageSrc = '/images/Coffee_Beans.webp'
   heroContent.mobileImageSrc = ''
-  heroContent.scrollHeight = 500
   heroContent.slides = []
   aboutContent.secondaryImage = ''
   aboutContent.experienceNumber = 7
@@ -498,11 +472,9 @@ function openEdit(section: HomepageSection) {
   const c = section.content || {}
   switch (section.type) {
     case 'hero':
-      heroContent.mediaType = c.mediaType || 'video'
-      heroContent.videoSrc = c.videoSrc || '/videos/scroll-video-final.mp4'
-      heroContent.imageSrc = c.imageSrc || ''
+      heroContent.mediaType = 'image'
+      heroContent.imageSrc = c.imageSrc || '/images/Coffee_Beans.webp'
       heroContent.mobileImageSrc = c.mobileImageSrc || ''
-      heroContent.scrollHeight = c.scrollHeight || 500
       heroContent.slides = c.slides || [
         { heading: section.title || 'عطر قهوه', lines: [section.subtitle || 'هر فنجان، یک داستان'] },
       ]
@@ -539,7 +511,7 @@ async function save() {
   let content: any = null
   switch (form.value.type) {
     case 'hero':
-      content = { mediaType: heroContent.mediaType, videoSrc: heroContent.videoSrc, imageSrc: heroContent.imageSrc, mobileImageSrc: heroContent.mobileImageSrc, scrollHeight: heroContent.scrollHeight, slides: heroContent.slides }
+      content = { mediaType: 'image', imageSrc: heroContent.imageSrc, mobileImageSrc: heroContent.mobileImageSrc, slides: heroContent.slides }
       break
     case 'about':
       content = { secondaryImage: aboutContent.secondaryImage, experienceNumber: aboutContent.experienceNumber, experienceLabel: aboutContent.experienceLabel, drinks: aboutContent.drinks }

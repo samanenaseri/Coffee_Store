@@ -239,7 +239,7 @@ onUnmounted(() => {
 
     <p class="text-center text-stone-600 text-[11px] mt-6">
       ورود شما به معنای پذیرش
-      <a href="#" class="text-stone-500 hover:text-stone-400 transition-colors">شرایط استفاده</a>
+          <NuxtLink to="/terms" class="text-stone-500 hover:text-stone-400 transition-colors">شرایط استفاده</NuxtLink>
       است
     </p>
   </div>

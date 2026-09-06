@@ -169,7 +169,7 @@ class SettingSeeder extends Seeder
             // SEO Settings
             [
                 'key' => 'site_url',
-                'value' => 'https://coffee-store.example.com',
+                'value' => 'https://beanhouse.ir',
             ],
             [
                 'key' => 'default_meta_title',
@@ -181,7 +181,7 @@ class SettingSeeder extends Seeder
             ],
             [
                 'key' => 'default_og_image',
-                'value' => '/images/og-image.jpg',
+                'value' => '/images/great-coffee-bean.jpeg',
             ],
             [
                 'key' => 'site_favicon',

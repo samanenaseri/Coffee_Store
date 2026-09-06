@@ -14,6 +14,7 @@ const checkoutStore = useCheckoutStore()
 const walletStore = useWalletStore()
 const notification = useNotification()
 const router = useRouter()
+const { resolveUrl } = useImageUrl()
 
 definePageMeta({
   middleware: ['auth'],
@@ -472,12 +473,12 @@ const formatPrice = (price: number) => {
                 class="flex items-center gap-3"
             >
               <img
-                  :src="item.product.image || '/images/placeholder.png'"
-                  :alt="item.product.name"
+                  :src="resolveUrl(item.product.image) || '/images/great-coffee-bean.jpeg'"
+                  :alt="item.product.title"
                   class="h-14 w-14 rounded-lg object-cover"
               >
               <div class="flex-1">
-                <p class="text-sm font-medium text-text">{{ item.product.name }}</p>
+                <p class="text-sm font-medium text-text">{{ item.product.title }}</p>
                 <p class="text-xs text-lightText">
                   {{ item.quantity }} × {{ formatPrice(item.product.price) }} تومان
                 </p>

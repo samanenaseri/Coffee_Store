@@ -7,18 +7,23 @@ const route = useRoute()
 const slug = route.params.slug as string
 const { apiFetch } = useApi()
 const { resolveUrl } = useImageUrl()
-const { settings, fetchSettings } = useSettings()
+const { fetchSettings } = useSettings()
+const {
+  defaultMetaDescription,
+  defaultMetaTitle,
+  resolveSeoImage,
+} = useSiteSeo()
 const cartStore = useCartStore()
 const notification = useNotification()
 
 await fetchSettings()
 
-const { data, pending, error } = useAsyncData(
+const { data: productResponse, pending, error } = useAsyncData(
   `product-${slug}`,
-  () => apiFetch<Product>(`/products/${slug}`),
+  () => apiFetch<any>(`/products/${slug}`),
 )
 
-const product = computed(() => data.value ?? null)
+const product = computed(() => productResponse.value?.data ?? productResponse.value ?? null)
 
 const packages = computed(() => {
   if (!product.value) return [] as WeightPackage[]
@@ -99,26 +104,18 @@ function addToCart() {
   }, 800)
 }
 
-const siteUrl = computed(() => settings.value.site_url || 'https://coffee-store.example.com')
-
 useSeoMeta({
-  title: () => product.value?.meta_title || (product.value
-      ? `${product.value.title} | ${settings.value.default_meta_title}`
-      : `محصول | ${settings.value.default_meta_title}`),
+  title: () => product.value?.metaTitle || product.value?.meta_title || (product.value
+      ? `${product.value.title} | ${defaultMetaTitle.value}`
+      : `محصول | ${defaultMetaTitle.value}`),
 
-  description: () => product.value?.meta_description || product.value?.description || settings.value.default_meta_description,
+  description: () => product.value?.metaDescription || product.value?.meta_description || product.value?.description || defaultMetaDescription.value,
 
-  ogTitle: () => product.value?.og_title || product.value?.title || '',
+  ogTitle: () => product.value?.ogTitle || product.value?.og_title || product.value?.title || '',
 
-  ogDescription: () => product.value?.og_description || product.value?.description || '',
+  ogDescription: () => product.value?.ogDescription || product.value?.og_description || product.value?.description || '',
 
-  ogImage: () => product.value?.og_image || product.value?.image || settings.value.default_og_image,
-})
-
-useHead({
-  link: [
-    { rel: 'canonical', href: `${siteUrl.value}/products/${slug}` },
-  ],
+  ogImage: () => resolveSeoImage(product.value?.ogImage || product.value?.og_image || product.value?.image),
 })
 </script>
 

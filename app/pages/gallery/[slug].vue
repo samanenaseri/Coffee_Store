@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import type { gallery } from '#shared/gallery'
-
 const route = useRoute()
 const slug = route.params.slug as string
 const { apiFetch } = useApi()
-const { settings, fetchSettings } = useSettings()
+const { resolveUrl } = useImageUrl()
+const { fetchSettings } = useSettings()
+const {
+  defaultMetaDescription,
+  defaultMetaTitle,
+  resolveSeoImage,
+} = useSiteSeo()
 
 await fetchSettings()
 
-const { data, pending, error } = useAsyncData(
+const { data: galleryResponse, pending, error } = useAsyncData(
     `gallery-${slug}`,
-    () => apiFetch<gallery>(`/gallery/${slug}`),
+    () => apiFetch<any>(`/gallery/${slug}`),
 )
 
-const item = computed(() => data.value ?? null)
-
-const siteUrl = computed(() => settings.value.site_url || 'https://coffee-store.example.com')
-
-useSeoMeta({
-  title: () => item.value?.meta_title || (item.value
-      ? `${item.value.title} | ${settings.value.default_meta_title}`
-      : `گالری | ${settings.value.default_meta_title}`),
-
-  description: () => item.value?.meta_description || item.value?.description || settings.value.default_meta_description,
-
-  ogTitle: () => item.value?.og_title || item.value?.title || '',
-
-  ogDescription: () => item.value?.og_description || item.value?.description || '',
-
-  ogImage: () => item.value?.og_image || item.value?.image || settings.value.default_og_image,
+const item = computed(() => galleryResponse.value?.data ?? galleryResponse.value ?? null)
+const itemImage = computed(() => {
+  const image = item.value?.image || item.value?.imageUrl
+  return resolveUrl(image) || '/images/great-coffee-bean.jpeg'
 })
 
-useHead({
-  link: [
-    { rel: 'canonical', href: `${siteUrl.value}/gallery/${slug}` },
-  ],
+useSeoMeta({
+  title: () => item.value?.metaTitle || item.value?.meta_title || (item.value
+      ? `${item.value.title} | ${defaultMetaTitle.value}`
+      : `گالری | ${defaultMetaTitle.value}`),
+
+  description: () => item.value?.metaDescription || item.value?.meta_description || item.value?.description || defaultMetaDescription.value,
+
+  ogTitle: () => item.value?.ogTitle || item.value?.og_title || item.value?.title || '',
+
+  ogDescription: () => item.value?.ogDescription || item.value?.og_description || item.value?.description || '',
+
+  ogImage: () => resolveSeoImage(item.value?.ogImage || item.value?.og_image || item.value?.image),
 })
 </script>
 
@@ -55,7 +55,7 @@ useHead({
       <article v-else-if="item" class="mt-8 space-y-8">
         <div>
           <img
-              :src="item.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=400&fit=crop'"
+              :src="itemImage"
               :alt="item.image_alt || item.imageAlt || item.title"
               class="w-full rounded-lg shadow-md object-cover max-h-[600px]"
           />

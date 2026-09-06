@@ -16,10 +16,8 @@ class HomepageSectionSeeder extends Seeder
                 'subtitle' => 'هر فنجان، یک داستان',
                 'description' => null,
                 'content' => [
-                    'mediaType' => 'video',
-                    'videoSrc' => '/videos/scroll-video-final.mp4',
-                    'imageSrc' => '',
-                    'scrollHeight' => 500,
+                    'mediaType' => 'image',
+                    'imageSrc' => '/images/Coffee_Beans.webp',
                 ],
                 'image' => null,
                 'link' => null,

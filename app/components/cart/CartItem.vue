@@ -21,10 +21,7 @@ const weightLabel = computed(() => {
 })
 
 const imageSrc = computed(() => {
-  if (!props.item.product.image) {
-    return 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=200&h=200&fit=crop'
-  }
-  return resolveUrl(props.item.product.image)
+  return resolveUrl(props.item.product.image) || '/images/great-coffee-bean.jpeg'
 })
 
 const packageId = computed(() => props.item.weightPackageId ?? null)

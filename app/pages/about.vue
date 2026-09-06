@@ -3,6 +3,7 @@ import StaffSection from "~/components/ui/StaffSection.vue";
 
 const { settings, fetchSettings } = useSettings()
 const { resolveUrl } = useImageUrl()
+const { siteName } = useSiteSeo()
 
 // Always refresh so admin updates show up immediately
 await fetchSettings({ force: true })
@@ -18,14 +19,8 @@ const secondImage = computed(() => {
 })
 
 useSeoMeta({
-  title: () => `${settings.value.about_title || 'درباره ما'} | قهوه‌فروشی`,
+  title: () => `${settings.value.about_title || 'درباره ما'} | ${siteName.value}`,
   description: () => settings.value.about_description?.substring(0, 160) || '',
-})
-
-useHead({
-  link: [
-    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/about` },
-  ],
 })
 </script>
 

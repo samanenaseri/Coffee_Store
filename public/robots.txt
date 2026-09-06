@@ -5,4 +5,4 @@ Disallow: /checkout
 Disallow: /login
 Disallow: /register
 
-Sitemap: https://coffee-store.example.com/sitemap.xml
+Sitemap: https://beanhouse.ir/sitemap.xml

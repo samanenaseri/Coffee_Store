@@ -380,16 +380,12 @@ const reorder = async (order: OrderWithProducts) => {
             </NuxtLink>
           </div>
             <div class="flex gap-3">
-              <base-button
-                  variant="outline"
-                  size="sm"
+              <NuxtLink
+                  :to="`/profile/orders/${order.id}`"
+                  class="inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-text ring-1 ring-inset ring-lightText transition-all duration-300 hover:bg-background"
               >
-                <NuxtLink
-                    :to="`/profile/orders/${order.id}`"
-                >
-                  مشاهده جزئیات
-                </NuxtLink>
-              </base-button>
+                مشاهده جزئیات
+              </NuxtLink>
               <base-button
                   size="sm"
                   :disabled="reorderPending === order.id"

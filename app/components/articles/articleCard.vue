@@ -1,7 +1,12 @@
 <script setup lang="ts">
-defineProps<{
+const props = defineProps<{
   article: any
 }>()
+
+const { resolveUrl } = useImageUrl()
+const imageSrc = computed(() => {
+  return resolveUrl(props.article?.image) || '/images/great-coffee-bean.jpeg'
+})
 </script>
 <template>
   <article
@@ -9,8 +14,8 @@ defineProps<{
   >
     <div class="relative overflow-hidden">
       <img
-          :src="article.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=400&fit=crop'"
-          :alt="article.title"
+          :src="imageSrc"
+          :alt="article.imageAlt || article.image_alt || article.title"
           class="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
 
@@ -33,12 +38,12 @@ defineProps<{
 
       <div class="mt-4 flex items-center justify-between">
         <NuxtLink :to="`/articles/${article.slug}`">
-          <button
-              class="rounded-full bg-text
+          <span
+              class="inline-flex rounded-full bg-text
                px-4 py-2 text-sm text-white opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
           >
             مشاهده
-          </button>
+          </span>
         </NuxtLink>
       </div>
     </div>

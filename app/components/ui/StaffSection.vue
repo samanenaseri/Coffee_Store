@@ -7,6 +7,12 @@ const props = defineProps<{
 }>()
 
 const { staffs, pending, error } = useStaffs()
+const { resolveUrl } = useImageUrl()
+const { socialUrl } = useSiteSeo()
+
+const imageSrc = (staff: any) => {
+  return resolveUrl(staff?.image) || '/images/great-coffee-bean.jpeg'
+}
 </script>
 
 <template>
@@ -51,17 +57,18 @@ const { staffs, pending, error } = useStaffs()
         >
           <div class="relative overflow-hidden">
             <img
-                :src="staff.image || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop&crop=face'"
+                :src="imageSrc(staff)"
                 :alt="staff.name"
                 class="h-72 w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
 
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"></div>
 
-            <a
+              <a
                 v-if="staff.instagram"
-                :href="`https://instagram.com/${staff.instagram}`"
+                :href="socialUrl(staff.instagram, 'https://instagram.com')"
                 target="_blank"
+                rel="noopener noreferrer"
                 class="absolute left-4 top-4 flex size-10 items-center justify-center rounded-full bg-white/90 text-stone-800 opacity-0 transition-all duration-300 hover:bg-amber-600 hover:text-white group-hover:opacity-100"
             >
               <RiInstagramLine class="size-5" />

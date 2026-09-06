@@ -1,24 +1,17 @@
 <template>
   <section id="hero" data-hero class="relative w-full" :style="{ height: heroHeightStyle }">
-    <div class="sticky top-0 h-screen overflow-hidden">
-      <!-- Desktop: video -->
-      <video
-          v-if="mediaType === 'video' && !isMobile"
-          ref="videoRef"
-          class="absolute inset-0 w-full h-full object-cover scale-110"
-          muted
-          playsinline
-          preload="auto"
-      >
-        <source :src="videoSrc" type="video/mp4" />
-      </video>
-
-      <!-- Mobile: mobileImageSrc if set, else imageSrc -->
+    <div class="relative h-screen overflow-hidden">
+      <!-- تصویر سبک و قابل اتکا برای بنر اصلی -->
       <img
-          v-else
-          :src="isMobile && mobileImageSrc ? mobileImageSrc : (imageSrc || '/images/hero-default.jpg')"
-          :alt="activeSlides[activeSlide]?.heading"
-          class="absolute inset-0 w-full h-full object-cover"
+          :src="heroImageSrc"
+          :alt="activeSlides[activeSlide]?.heading || heading"
+          class="absolute inset-0 h-full w-full object-cover"
+          width="2000"
+          height="1125"
+          loading="eager"
+          fetchpriority="high"
+          decoding="async"
+          @error="handleImageError"
       />
 
       <div
@@ -55,6 +48,7 @@
               v-for="(_, i) in activeSlides"
               :key="i"
               type="button"
+              :aria-label="`نمایش اسلاید ${i + 1}`"
               class="w-3 h-3 rounded-full transition-all duration-500"
               :class="activeSlide === i
                 ? 'bg-amber-400 scale-125 shadow-lg shadow-amber-400/40'
@@ -68,6 +62,7 @@
               type="button"
               class="flex items-center justify-center w-12 h-12 rounded-full bg-stone-400 text-text animate-bounce shadow-lg"
               aria-label="اسکرول به پایین"
+              @click="scrollToContent"
           >
             <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -93,17 +88,18 @@
 
 <script setup>
 const props = defineProps({
-  mediaType: { type: String, default: 'video' },
-  videoSrc: { type: String, default: '/videos/scroll-video-final.mp4' },
-  imageSrc: { type: String, default: '/images/hero-default.jpg' },
+  // Kept for CMS compatibility; the homepage intentionally uses an image banner.
+  mediaType: { type: String, default: 'image' },
+  imageSrc: { type: String, default: '/images/Coffee_Beans.webp' },
   mobileImageSrc: { type: String, default: '' },
   heading: { type: String, default: 'عطر قهوه' },
   subtitle: { type: String, default: 'هر فنجان، یک داستان' },
-  scrollHeight: { type: Number, default: 500 },
   slides: { type: Array, default: null },
 })
 
-const defaultSlides = [
+const fallbackImage = '/images/Coffee_Beans.webp'
+
+const defaultSlides = computed(() => [
   {
     heading: props.heading || 'عطر قهوه',
     lines: [props.subtitle || 'هر فنجان، یک داستان'],
@@ -116,23 +112,30 @@ const defaultSlides = [
     heading: 'جادوی دانه‌ها',
     lines: ['در هر جرعه، با طعم قهوه'],
   },
-]
+])
 
 const activeSlides = computed(() => {
   if (props.slides && props.slides.length > 0) return props.slides
-  return defaultSlides
+  return defaultSlides.value
 })
 
 const activeSlide = ref(0)
 const slideDirection = ref('slide-up')
-const videoRef = ref(null)
 const isMobile = ref(false)
+const imageHasError = ref(false)
 
 const heroHeightStyle = computed(() => {
-  return isMobile.value ? '100vh' : props.scrollHeight + 'vh'
+  return '100vh'
+})
+
+const heroImageSrc = computed(() => {
+  if (imageHasError.value) return fallbackImage
+  if (isMobile.value && props.mobileImageSrc) return props.mobileImageSrc
+  return props.imageSrc || fallbackImage
 })
 
 let autoSlideTimer = null
+let resizeHandler = null
 
 function goToSlide(index) {
   if (index === activeSlide.value) return
@@ -155,70 +158,34 @@ function stopAutoSlide() {
   }
 }
 
+function handleImageError(event) {
+  const image = event?.target
+  if (image && image.src && !image.src.endsWith(fallbackImage)) {
+    imageHasError.value = true
+  }
+}
+
+function scrollToContent() {
+  if (!import.meta.client) return
+
+  const heroSection = document.getElementById('hero')
+  const nextPosition = (heroSection?.offsetTop || 0) + window.innerHeight
+  window.scrollTo({ top: nextPosition, behavior: 'smooth' })
+}
+
 onMounted(() => {
   isMobile.value = window.innerWidth < 768
   const onResize = () => {
-    const wasMobile = isMobile.value
     isMobile.value = window.innerWidth < 768
-    if (isMobile.value && !wasMobile) {
-      stopAutoSlide()
-      startAutoSlide()
-    } else if (!isMobile.value && wasMobile) {
-      stopAutoSlide()
-    }
   }
+  resizeHandler = onResize
   window.addEventListener('resize', onResize)
+  startAutoSlide()
+})
 
-  if (isMobile.value) {
-    startAutoSlide()
-  }
-
-  const heroSection = document.getElementById('hero')
-  if (!heroSection) return
-
-  // Desktop: scroll-based slide changes
-  const updateSlide = () => {
-    if (isMobile.value) return
-    const scrollTop = window.scrollY
-    const start = heroSection.offsetTop
-    const end = start + heroSection.offsetHeight - window.innerHeight
-
-    const progress = Math.min(Math.max((scrollTop - start) / (end - start), 0), 1)
-
-    const slideCount = activeSlides.value.length
-    const newSlide = Math.min(Math.floor(progress * slideCount), slideCount - 1)
-
-    if (newSlide !== activeSlide.value) {
-      slideDirection.value = newSlide > activeSlide.value ? 'slide-up' : 'slide-down'
-      activeSlide.value = newSlide
-    }
-  }
-
-  window.addEventListener('scroll', updateSlide)
-
-  // Desktop: video sync
-  if (props.mediaType === 'video') {
-    const video = videoRef.value
-    if (video) {
-      const updateVideo = () => {
-        if (!video?.duration || isMobile.value) return
-        const scrollTop = window.scrollY
-        const start = heroSection.offsetTop
-        const end = start + heroSection.offsetHeight - window.innerHeight
-        const progress = Math.min(Math.max((scrollTop - start) / (end - start), 0), 1)
-        video.currentTime = progress * video.duration
-      }
-      video.addEventListener('loadedmetadata', updateVideo)
-      window.addEventListener('scroll', updateVideo)
-      onUnmounted(() => window.removeEventListener('scroll', updateVideo))
-    }
-  }
-
-  onUnmounted(() => {
-    window.removeEventListener('scroll', updateSlide)
-    window.removeEventListener('resize', onResize)
-    stopAutoSlide()
-  })
+onUnmounted(() => {
+  if (resizeHandler) window.removeEventListener('resize', resizeHandler)
+  stopAutoSlide()
 })
 </script>
 

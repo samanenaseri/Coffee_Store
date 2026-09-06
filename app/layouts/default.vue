@@ -2,31 +2,50 @@
 const { settings, fetchSettings } = useSettings()
 await fetchSettings()
 
-useSeoMeta({
-  ogImage: "/og-image.jpg",
-  twitterImage: "/og-image.jpg",
-})
+const {
+  defaultMetaDescription,
+  defaultOgImage,
+  logoUrl,
+  siteName,
+  siteUrl,
+  socialLinks,
+} = useSiteSeo()
 
 useHead({
   script: [
     {
+      key: 'store-structured-data',
       type: "application/ld+json",
-      innerHTML: () => JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Store",
-        name: "قهوه‌فروشی | Coffee Store",
-        url: settings.value.site_url || 'https://coffee-store.example.com',
-        description: "فروشگاه تخصصی قهوه با انواع قهوه‌های اسپرسو، لاته، کاپوچینو",
-        telephone: "+98-21-12345678",
-        address: {
-          "@type": "PostalAddress",
-          addressCountry: "IR",
-        },
-        sameAs: [
-          "https://instagram.com/coffeeshop",
-          "https://t.me/coffeeshop",
-        ],
-      }),
+      innerHTML: () => {
+        const schema: Record<string, unknown> = {
+          "@context": "https://schema.org",
+          "@type": "Store",
+          "@id": `${siteUrl.value}/#store`,
+          name: siteName.value,
+          url: `${siteUrl.value}/`,
+          description: defaultMetaDescription.value,
+          image: defaultOgImage.value,
+          address: {
+            "@type": "PostalAddress",
+            addressCountry: "IR",
+          },
+          sameAs: socialLinks.value,
+        }
+
+        const phone = settings.value.store_phone?.trim()
+        const address = settings.value.store_address?.trim()
+        if (phone) schema.telephone = phone
+        if (address) {
+          schema.address = {
+            "@type": "PostalAddress",
+            streetAddress: address,
+            addressCountry: "IR",
+          }
+        }
+        if (logoUrl.value) schema.logo = logoUrl.value
+
+        return JSON.stringify(schema)
+      },
     },
   ],
 })

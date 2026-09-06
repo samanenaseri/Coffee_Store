@@ -36,7 +36,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">تصویر پیش‌فرض OG</label>
             <p class="text-xs text-gray-400 mb-2">تصویری که هنگام اشتراک‌گذاری صفحات در شبکه‌های اجتماعی نمایش داده می‌شود</p>
             <div class="flex gap-2">
-              <InputText v-model="form.default_og_image" class="flex-1" placeholder="/images/og-image.jpg" />
+              <InputText v-model="form.default_og_image" class="flex-1" placeholder="/images/great-coffee-bean.jpeg" />
               <label class="cursor-pointer bg-amber-50 hover:bg-amber-100 text-amber-700 px-4 py-2 rounded-lg border border-amber-200 flex items-center gap-2 transition-colors">
                 <i class="pi pi-upload"></i>
                 <span class="text-sm">آپلود</span>

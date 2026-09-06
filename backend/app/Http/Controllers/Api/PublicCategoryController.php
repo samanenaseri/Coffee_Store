@@ -14,4 +14,16 @@ class PublicCategoryController extends Controller
 
         return response()->json($categories);
     }
+
+    public function show(string $slug): JsonResponse
+    {
+        $category = Category::active()
+            ->with(['products' => function ($query) {
+                $query->active()->ordered();
+            }])
+            ->where('slug', $slug)
+            ->firstOrFail();
+
+        return response()->json($category);
+    }
 }

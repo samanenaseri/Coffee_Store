@@ -20,8 +20,8 @@
               class="group flex flex-col sm:flex-row rounded-2xl overflow-hidden shadow hover:shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
           >
             <img
-                :src="article.image"
-                :alt="article.imageAlt"
+                :src="imageSrc(article)"
+                :alt="article.imageAlt || article.image_alt || article.title"
                 class="w-full sm:w-32 h-48 sm:h-auto object-cover flex-shrink-0"
             />
             <div class="p-4 bg-transparent">
@@ -38,8 +38,8 @@
             class="lg:col-span-4 relative rounded-3xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
         >
           <img
-              :src="articles[0]?.image"
-              :alt="articles[0]?.imageAlt"
+              :src="imageSrc(articles[0])"
+              :alt="articles[0]?.imageAlt || articles[0]?.image_alt || articles[0]?.title"
               class="w-full h-64 sm:h-80 lg:h-[680px] object-cover"
           />
           <div class="absolute inset-0 bg-black/30 flex flex-col justify-end p-6">
@@ -60,4 +60,9 @@ const props = defineProps({
 })
 
 const { articles, pending, error } = useArticles()
+const { resolveUrl } = useImageUrl()
+
+const imageSrc = (article: any) => {
+  return resolveUrl(article?.image) || '/images/great-coffee-bean.jpeg'
+}
 </script>

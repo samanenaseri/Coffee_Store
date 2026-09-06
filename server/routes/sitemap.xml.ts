@@ -1,6 +1,26 @@
 export default defineEventHandler(async () => {
     const config = useRuntimeConfig()
     const apiBase = config.public?.apiBase || 'http://localhost:8000/api/v1'
+    const fallbackBaseUrl = 'https://beanhouse.ir'
+
+    const normalizeBaseUrl = (value: unknown): string => {
+        const raw = String(value || '').trim()
+        if (
+            !/^https?:\/\//i.test(raw)
+            || /coffee-store\.example\.com|localhost|127\.0\.0\.1|0\.0\.0\.0/i.test(raw)
+        ) {
+            return fallbackBaseUrl
+        }
+
+        return raw.replace(/\/+$/, '')
+    }
+
+    const escapeXml = (value: string): string => value
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&apos;')
 
     interface SitemapUrl {
         loc: string
@@ -17,6 +37,7 @@ export default defineEventHandler(async () => {
         { loc: "/gallery", changefreq: "weekly", priority: 0.6 },
         { loc: "/about", changefreq: "monthly", priority: 0.5 },
         { loc: "/contact", changefreq: "monthly", priority: 0.5 },
+        { loc: "/terms", changefreq: "yearly", priority: 0.2 },
     ]
 
     let productPages: SitemapUrl[] = []
@@ -68,18 +89,22 @@ export default defineEventHandler(async () => {
         }))
     } catch {}
 
-    let baseUrl = 'https://coffee-store.example.com'
+    let baseUrl = fallbackBaseUrl
     try {
         const settingsRes = await $fetch<any>(`${apiBase}/settings`)
-        if (settingsRes?.site_url) baseUrl = settingsRes.site_url
+        const settings = settingsRes?.data && typeof settingsRes.data === 'object'
+            ? settingsRes.data
+            : settingsRes
+        baseUrl = normalizeBaseUrl(settings?.site_url)
     } catch {}
 
     const urls = [...staticPages, ...productPages, ...articlePages, ...galleryPages, ...categoryPages]
 
     const urlElements = urls.map((url) => {
-        let result = `  <url>\n    <loc>${baseUrl}${url.loc}</loc>\n    <changefreq>${url.changefreq}</changefreq>\n    <priority>${url.priority}</priority>`
+        const loc = encodeURI(`${baseUrl}${url.loc}`)
+        let result = `  <url>\n    <loc>${escapeXml(loc)}</loc>\n    <changefreq>${url.changefreq}</changefreq>\n    <priority>${url.priority}</priority>`
         if (url.lastmod) {
-            result += `\n    <lastmod>${url.lastmod}</lastmod>`
+            result += `\n    <lastmod>${escapeXml(String(url.lastmod))}</lastmod>`
         }
         result += "\n  </url>"
         return result

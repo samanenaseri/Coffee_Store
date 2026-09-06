@@ -3,18 +3,13 @@ import ProductCard from "~/components/products/ProductCard.vue";
 
 const { settings, fetchSettings } = useSettings()
 await fetchSettings()
+const { siteName } = useSiteSeo()
 
 useSeoMeta({
-  title: "محصولات | قهوه‌فروشی",
-  description: "مشاهده و خرید انواع قهوه‌های تخصصی، دانه قهوه، اسپرسو، لاته و کاپوچینو از فروشگاه قهوه‌فروشی",
-  ogTitle: "محصولات | قهوه‌فروشی",
-  ogDescription: "مجموعه کامل محصولات قهوه با بهترین کیفیت و قیمت مناسب",
-})
-
-useHead({
-  link: [
-    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/products` },
-  ],
+  title: () => `محصولات | ${siteName.value}`,
+  description: () => `مشاهده و خرید انواع قهوه‌های تخصصی و دانه قهوه از ${siteName.value}`,
+  ogTitle: () => `محصولات | ${siteName.value}`,
+  ogDescription: () => `مجموعه محصولات قهوه با بهترین کیفیت از ${siteName.value}`,
 })
 
 const { products, pending, error } = useProducts()

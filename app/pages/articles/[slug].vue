@@ -1,40 +1,40 @@
 <script setup lang="ts">
-import type {Article} from "#shared/article";
-
 const route = useRoute()
 const slug = route.params.slug as string
 const { apiFetch } = useApi()
-const { settings, fetchSettings } = useSettings()
+const { resolveUrl } = useImageUrl()
+const { fetchSettings } = useSettings()
+const {
+  defaultMetaDescription,
+  defaultMetaTitle,
+  resolveSeoImage,
+} = useSiteSeo()
 
 await fetchSettings()
 
-const { data, pending, error } = useAsyncData(
+const { data: articleResponse, pending, error } = useAsyncData(
     `article-${slug}`,
-    () => apiFetch<Article>(`/articles/${slug}`),
+    () => apiFetch<any>(`/articles/${slug}`),
 )
 
-const article = computed(() => data.value ?? null)
-
-const siteUrl = computed(() => settings.value.site_url || 'https://coffee-store.example.com')
-
-useSeoMeta({
-  title: () => article.value?.meta_title || (article.value
-      ? `${article.value.title} | ${settings.value.default_meta_title}`
-      : `مقاله | ${settings.value.default_meta_title}`),
-
-  description: () => article.value?.meta_description || article.value?.description || settings.value.default_meta_description,
-
-  ogTitle: () => article.value?.og_title || article.value?.title || '',
-
-  ogDescription: () => article.value?.og_description || article.value?.description || '',
-
-  ogImage: () => article.value?.og_image || article.value?.image || settings.value.default_og_image,
+const article = computed(() => articleResponse.value?.data ?? articleResponse.value ?? null)
+const articleImage = computed(() => {
+  const image = article.value?.image || article.value?.imageUrl
+  return resolveUrl(image) || '/images/great-coffee-bean.jpeg'
 })
 
-useHead({
-  link: [
-    { rel: 'canonical', href: `${siteUrl.value}/articles/${slug}` },
-  ],
+useSeoMeta({
+  title: () => article.value?.metaTitle || article.value?.meta_title || (article.value
+      ? `${article.value.title} | ${defaultMetaTitle.value}`
+      : `مقاله | ${defaultMetaTitle.value}`),
+
+  description: () => article.value?.metaDescription || article.value?.meta_description || article.value?.description || defaultMetaDescription.value,
+
+  ogTitle: () => article.value?.ogTitle || article.value?.og_title || article.value?.title || '',
+
+  ogDescription: () => article.value?.ogDescription || article.value?.og_description || article.value?.description || '',
+
+  ogImage: () => resolveSeoImage(article.value?.ogImage || article.value?.og_image || article.value?.image),
 })
 
 
@@ -57,8 +57,8 @@ useHead({
       <article v-else-if="article" class="mt-8 grid grid-cols-1 md:grid-cols-1 gap-8">
         <div>
           <img
-              :src="article.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=800&h=400&fit=crop'"
-              :alt="article.image_alt || article.imageAlt"
+              :src="articleImage"
+              :alt="article.image_alt || article.imageAlt || article.title"
               class="w-full rounded-lg shadow-md"
           />
         </div>

@@ -34,9 +34,7 @@
               </NuxtLink>
             </li>
             <li>
-              <NuxtLink to="/cart" class="hover:text-lightText ">
               <CartDropdown class="hover:text-lightText"/>
-              </NuxtLink>
             </li>
             <li v-if="isLoggedIn">
               <NuxtLink to="/profile" class="hover:text-lightText flex items-center gap-1.5">
@@ -59,9 +57,7 @@
 
         <!-- Mobile: cart + hamburger -->
         <div class="flex lg:hidden items-center gap-3" :class="isHome && !isScrolled ? 'text-white' : 'text-text'">
-          <NuxtLink to="/cart" class="hover:text-lightText">
-            <CartDropdown class="hover:text-lightText"/>
-          </NuxtLink>
+          <CartDropdown class="hover:text-lightText"/>
           <ThemeToggle/>
           <button
             type="button"
@@ -144,7 +140,10 @@ const mobileOpen = ref(false)
 
 const handleScroll = () => {
   if (!isHome.value) return
-  isScrolled.value = window.scrollY >= heroHeight.value - window.innerHeight
+  // Keep the header transparent over the image banner, then add contrast after
+  // the user has started scrolling.
+  const threshold = Math.max(heroHeight.value - window.innerHeight, 24)
+  isScrolled.value = window.scrollY >= threshold
 }
 
 const checkDark = () => {

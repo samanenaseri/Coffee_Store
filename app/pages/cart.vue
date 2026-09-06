@@ -43,14 +43,10 @@ const cartStore = useCartStore()
         </div>
         <NuxtLink
             to="/checkout"
-            class="flex-1"
+            class="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-5 py-[11px] text-base font-medium transition-all duration-300 main-button txt-btn shadow-theme-xs hover:bg-brand-600"
         >
-        <base-button
-            size="md"
-            variant="primary"
-            className="w-full"
-        >ثبت سفارش</base-button>
-          </NuxtLink>
+          ثبت سفارش
+        </NuxtLink>
 
       </div>
     </div>

@@ -12,6 +12,10 @@ const props = defineProps({
 })
 
 const { testimonials, pending, error } = useTestimonials()
+const { resolveUrl } = useImageUrl()
+
+const backgroundSrc = computed(() => resolveUrl(props.backgroundImage) || '/images/testimonal-bg.jpg')
+const imageSrc = (testimonial: any) => resolveUrl(testimonial?.image) || ''
 
 const activeIndex = ref(0)
 let autoSlideTimer: ReturnType<typeof setInterval> | null = null
@@ -78,7 +82,7 @@ onBeforeUnmount(() => {
     <!-- background image -->
     <div
         class="absolute inset-0 bg-cover bg-center"
-        :style="{ backgroundImage: `url('${backgroundImage}')` }"
+        :style="{ backgroundImage: `url('${backgroundSrc}')` }"
     ></div>
 
     <!-- dark overlay روی عکس، نه روی متن -->
@@ -166,8 +170,8 @@ onBeforeUnmount(() => {
 
               <div class="mt-8 flex flex-col items-center">
                 <img
-                    v-if="testimonial.image"
-                    :src="testimonial.image"
+                    v-if="imageSrc(testimonial)"
+                    :src="imageSrc(testimonial)"
                     :alt="testimonial.name"
                     class="size-16 rounded-full object-cover ring-4 ring-testimonial"
                 />

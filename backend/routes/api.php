@@ -61,6 +61,7 @@ Route::prefix('v1')->group(function () {
     Route::get('testimonials', [PublicTestimonialController::class, 'index']);
 
     Route::get('categories', [PublicCategoryController::class, 'index']);
+    Route::get('categories/{slug}', [PublicCategoryController::class, 'show']);
 
     Route::get('settings', [SettingController::class, 'index']);
 

@@ -9,17 +9,14 @@ import {
 } from '@remixicon/vue'
 const { settings, fetchSettings } = useSettings()
 const { resolveUrl } = useImageUrl()
+const { siteName, socialUrl } = useSiteSeo()
 await fetchSettings()
 
-useSeoMeta({
-  title: () => `${settings.value.contact_title} | قهوه‌فروشی`,
-  description: () => settings.value.contact_hero_description?.substring(0, 160),
-})
+const instagramUrl = computed(() => socialUrl(settings.value.store_instagram, 'https://instagram.com'))
 
-useHead({
-  link: [
-    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/contact` },
-  ],
+useSeoMeta({
+  title: () => `${settings.value.contact_title} | ${siteName.value}`,
+  description: () => settings.value.contact_hero_description?.substring(0, 160),
 })
 
 const form = reactive({
@@ -125,8 +122,10 @@ const submitForm = () => {
 
               <div class="mt-8 border-t border-border pt-6">
                 <a
-                    :href="`https://instagram.com/${settings.store_instagram}`"
+                    v-if="instagramUrl"
+                    :href="instagramUrl"
                     target="_blank"
+                    rel="noopener noreferrer"
                     class="inline-flex items-center gap-2 rounded-full bg-text px-5 py-3 text-sm text-white transition-all duration-300 hover:-translate-y-1 hover:bg-background hover:text-text hover:shadow-lg"
                 >
                   <RiInstagramLine class="size-5" />
@@ -200,7 +199,7 @@ const submitForm = () => {
 
         <!-- map placeholder -->
         <div class="mt-10 overflow-hidden rounded-3xl bg-stone-200 shadow-lg dark:bg-stone-800">
-          <div class="flex h-72 items-center justify-center bg-cover bg-center" :style="{ backgroundImage: `url(${settings.contact_map_background})` }">
+          <div class="flex h-72 items-center justify-center bg-cover bg-center" :style="{ backgroundImage: `url(${resolveUrl(settings.contact_map_background)})` }">
             <div class="rounded-2xl bg-black/60 px-6 py-4 text-center text-white backdrop-blur">
               <p class="font-bold">
                 {{ settings.contact_map_title }}

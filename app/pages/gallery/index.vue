@@ -4,18 +4,13 @@ import GalleryCard from "~/components/gallery/GalleryCard.vue";
 
 const { settings, fetchSettings } = useSettings()
 await fetchSettings()
+const { siteName } = useSiteSeo()
 
 useSeoMeta({
-  title: "گالری عکس | قهوه‌فروشی",
-  description: "تصاویر محیط فروشگاه، نوشیدنی‌ها و فضای داخلی قهوه‌فروشی",
-  ogTitle: "گالری عکس | قهوه‌فروشی",
-  ogDescription: "گالری تصاویر فروشگاه قهوه‌فروشی",
-})
-
-useHead({
-  link: [
-    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/gallery` },
-  ],
+  title: () => `گالری عکس | ${siteName.value}`,
+  description: () => `تصاویر محیط فروشگاه، نوشیدنی‌ها و فضای داخلی ${siteName.value}`,
+  ogTitle: () => `گالری عکس | ${siteName.value}`,
+  ogDescription: () => `گالری تصاویر ${siteName.value}`,
 })
 
 const {gallery, pending, error} = useGallery()

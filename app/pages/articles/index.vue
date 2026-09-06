@@ -3,18 +3,13 @@ import articleCard from "~/components/articles/articleCard.vue";
 
 const { settings, fetchSettings } = useSettings()
 await fetchSettings()
+const { siteName } = useSiteSeo()
 
 useSeoMeta({
-  title: "مقالات | قهوه‌فروشی",
-  description: "مطالعه جدیدترین مقالات آموزشی و اطلاعاتی درباره قهوه، روش‌های دم‌آوری و فرهنگ قهوه",
-  ogTitle: "مقالات | قهوه‌فروشی",
-  ogDescription: "مقاله‌های تخصصی درباره قهوه و روش‌های دم‌آوری",
-})
-
-useHead({
-  link: [
-    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}/articles` },
-  ],
+  title: () => `مقالات | ${siteName.value}`,
+  description: () => `مطالعه جدیدترین مقالات درباره قهوه، روش‌های دم‌آوری و فرهنگ قهوه در ${siteName.value}`,
+  ogTitle: () => `مقالات | ${siteName.value}`,
+  ogDescription: () => `مقاله‌های تخصصی درباره قهوه و روش‌های دم‌آوری در ${siteName.value}`,
 })
 
 const { articles, pending, error } = useArticles()

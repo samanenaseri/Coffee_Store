@@ -27,6 +27,12 @@ interface Section {
 
 const { settings, fetchSettings } = useSettings()
 await fetchSettings()
+const {
+  absoluteUrl,
+  defaultMetaDescription,
+  defaultMetaTitle,
+  defaultOgImage,
+} = useSiteSeo()
 
 const sections = ref<Section[]>([])
 const loading = ref(true)
@@ -55,16 +61,12 @@ function getSection(type: string): Section | undefined {
 }
 
 useSeoMeta({
-  title: "قهوه‌فروشی | Coffee Store",
-  ogTitle: "قهوه‌فروشی | Coffee Store",
-  description: "فروشگاه تخصصی قهوه با انواع قهوه‌های اسپرسو، لاته، کاپوچینو و دانه‌های قهوه عربیکا",
-  ogDescription: "بهترین قهوه‌ها را از ما بخواهید - فروشگاه تخصصی قهوه",
-})
-
-useHead({
-  link: [
-    { rel: 'canonical', href: `${settings.value.site_url || 'https://coffee-store.example.com'}` },
-  ],
+  title: () => defaultMetaTitle.value,
+  ogTitle: () => defaultMetaTitle.value,
+  description: () => defaultMetaDescription.value,
+  ogDescription: () => defaultMetaDescription.value,
+  ogImage: () => defaultOgImage.value,
+  ogUrl: () => absoluteUrl('/'),
 })
 </script>
 
@@ -73,16 +75,13 @@ useHead({
     <!-- Hero Section -->
     <HeroVideo
       v-if="hasSection('hero')"
-      :media-type="getSection('hero')?.content?.mediaType || 'video'"
-      :video-src="getSection('hero')?.content?.videoSrc"
-      :image-src="resolveUrl(getSection('hero')?.content?.imageSrc)"
+      :image-src="resolveUrl(getSection('hero')?.content?.imageSrc) || '/images/Coffee_Beans.webp'"
       :mobile-image-src="resolveUrl(getSection('hero')?.content?.mobileImageSrc)"
       :heading="getSection('hero')?.title"
       :subtitle="getSection('hero')?.subtitle"
-      :scroll-height="getSection('hero')?.content?.scrollHeight"
       :slides="getSection('hero')?.content?.slides"
     />
-    <HeroVideo v-else />
+    <HeroVideo v-else :image-src="'/images/Coffee_Beans.webp'" />
 
     <!-- About Section -->
     <DescribeSection

@@ -100,7 +100,7 @@ const defaultSettings = (): Settings => ({
   site_url: 'https://beanhouse.ir',
   default_meta_title: 'کافه استور | فروشگاه تخصصی قهوه',
   default_meta_description: 'کافه استور با بیش از ۵ سال تجربه، بهترین قهوه‌ها و دسرهای تازه را با کیفیت بالا و قیمت مناسب ارائه می‌دهد.',
-  default_og_image: '/images/og-image.jpg',
+  default_og_image: '/images/great-coffee-bean.jpeg',
   site_favicon: '/favicon.ico',
   google_analytics_id: '',
   google_search_console_id: '',

@@ -8,9 +8,34 @@
 <script setup lang="ts">
 const { settings, fetchSettings } = useSettings()
 const { resolveUrl } = useImageUrl()
+const route = useRoute()
 
 // Load settings early so favicon / brand assets apply globally
 await fetchSettings()
+
+const {
+  absoluteUrl,
+  defaultMetaDescription,
+  defaultMetaTitle,
+  defaultOgImage,
+  siteName,
+} = useSiteSeo()
+
+useSeoMeta({
+  title: () => defaultMetaTitle.value,
+  description: () => defaultMetaDescription.value,
+  ogTitle: () => defaultMetaTitle.value,
+  ogDescription: () => defaultMetaDescription.value,
+  ogType: 'website',
+  ogSiteName: () => siteName.value,
+  ogUrl: () => absoluteUrl(route.path),
+  ogImage: () => defaultOgImage.value,
+  ogImageAlt: () => `${siteName.value} - فروشگاه تخصصی قهوه`,
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => defaultMetaTitle.value,
+  twitterDescription: () => defaultMetaDescription.value,
+  twitterImage: () => defaultOgImage.value,
+})
 
 const faviconHref = computed(() => {
   const raw = settings.value.site_favicon?.trim()
@@ -35,6 +60,11 @@ useHead({
         },
     ],
     link: [
+      () => ({
+        key: 'canonical',
+        rel: 'canonical',
+        href: absoluteUrl(route.path),
+      }),
       () => ({
         key: 'site-favicon',
         rel: 'icon',

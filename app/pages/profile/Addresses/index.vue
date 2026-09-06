@@ -252,12 +252,13 @@ onMounted(() => {
         برای ثبت سفارش و انتخاب محل تحویل، اولین آدرس خود را اضافه کنید.
       </p>
 
-      <NuxtLink
-          to="/profile/addresses/create"
+      <button
+          type="button"
           class="mt-6 inline-flex items-center justify-center rounded-xl bg-amber-700 px-6 py-3 text-sm font-medium text-white transition hover:bg-amber-800"
+          @click="openCreateModal"
       >
         افزودن اولین آدرس
-      </NuxtLink>
+      </button>
     </div>
 
     <!-- لیست آدرس‌ها -->

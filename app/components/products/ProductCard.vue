@@ -17,6 +17,7 @@ const props = defineProps<{
 const cartStore = useCartStore()
 const favoriteStore = useFavoriteStore()
 const notification = useNotification()
+const { resolveUrl } = useImageUrl()
 
 const isFilling = ref(false)
 
@@ -54,6 +55,11 @@ const weightHint = computed(() => {
     )
   }
   return null
+})
+
+const productImage = computed(() => {
+  const image = resolveUrl(props.product.image)
+  return image || '/images/great-coffee-bean.jpeg'
 })
 
 const addToCartWithAnimation = (product: Product) => {
@@ -137,8 +143,8 @@ const toggleFavorite = async () => {
         />
       </button>
       <img
-          :src="product.image || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop'"
-          :alt="product.title"
+          :src="productImage"
+          :alt="product.imageAlt || product.image_alt || product.title"
           class="h-56 w-full object-cover transition-transform duration-700 group-hover:scale-110"
       />
 
